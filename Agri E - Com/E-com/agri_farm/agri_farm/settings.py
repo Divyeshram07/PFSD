@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-47m+#x#46et6_ubz6iy$!t^+&&usytl1p!d3dd+#%d*ph^@ul(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['agri-farm.onrender.com']
 
 
 # Application definition
@@ -148,3 +148,6 @@ DEFAULT_FROM_EMAIL = 'dkumar11dec2003@gmail.com'
 
 # Add the ADMIN_EMAIL
 ADMIN_EMAIL = 'dkumar11dec2003@gmail.com'
+
+
+CSRF_TRUSTED_ORIGINS = [ 'https://agri-farm.onrender.com']
