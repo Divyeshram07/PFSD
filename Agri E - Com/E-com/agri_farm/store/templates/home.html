@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agri Farm - Home</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- For dropdown JavaScript -->
+</head>
+<body>
+   <header>
+    <div class="logo">
+        <h1>Agri Farm</h1>
+    </div>
+    <nav>
+        <ul>
+
+            <li><a href="{% url 'product_list' %}">Products</a></li>
+            <li><a href="{% url 'view_cart' %}">Cart</a></li>
+            <input type="text" id="searchBox" placeholder="Search for a product..." oninput="searchProducts()">
+
+            {% if username %}
+                <li class="dropdown">
+                    <a href="#" class="dropbtn">{{ username }}</a>
+                    <div class="dropdown-content">
+                         <a href="{% url 'profile' %}">My Profile</a>
+
+                        <a href="{% url 'home' %}">Home</a>
+                        <a href="{% url 'contact' %}">Contact</a>
+                        <a href="{% url 'logout' %}">Logout</a>
+                    </div>
+                </li>
+            {% else %}
+                <li class="dropdown">
+                    <a href="#" class="dropbtn">Login <i class="fa-solid fa-user-plus"></i></a>
+                    <div class="dropdown-content">
+                        <a href="{% url 'login' %}">Login</a>
+                        <a href="{% url 'register' %}">Register</a>
+                    </div>
+                </li>
+            {% endif %}
+            <li class="dropdown">
+    <a href="#" class="dropbtn">☰</a>
+    <div class="dropdown-content">
+
+        <a href="{% url 'customer_care' %}">24x7 Customer Care</a>
+
+    </div>
+</li>
+        </ul>
+    </nav>
+</header>
+
+    <section class="hero">
+    <div class="hero-content">
+        <h1>Welcome to Our E-Commerce Site</h1>
+        <p>Explore a wide range of products</p>
+        <a href="{% url 'product_list' %}" class="cta-button">Shop Now</a>
+    </div>
+</section>
+
+
+    <section class="categories">
+        <h3>Categories</h3>
+        <div class="category-list">
+            <div class="category-item">
+                <a href="#">Seeds</a>
+                <div class="dropdown">
+                    <ul>
+                        <li><a href="#">VEGETABLE SEEDS</a></li>
+                        <li><a href="#">BOTTLE GOURD SEEDS</a></li>
+                        <li><a href="#">CUCUMBER SEEDS</a></li>
+                        <li><a href="#">BRINJAL SEEDS</a></li>
+                        <li><a href="#">TOMATO SEEDS</a></li>
+                        <li><a href="#">CARROT SEEDS</a></li>
+                        <li><a href="#">CHILLY SEEDS</a></li>
+                        <li><a href="#">BEET ROOT SEEDS</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="category-item">
+                <a href="#">Fertilizers</a>
+                <div class="dropdown">
+                    <ul>
+                        <li><a href="#">Liquid Fertilizers</a></li>
+                        <li><a href="#">Organic Fertilizers</a></li>
+                        <li><a href="#">Granular Fertilizers</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="category-item">
+                <a href="#">Pesticides</a>
+                <div class="dropdown">
+                    <ul>
+                        <li><a href="#">Insecticides</a></li>
+                        <li><a href="#">Herbicides</a></li>
+                        <li><a href="#">Fungicides</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="category-item">
+                <a href="#">Tools</a>
+                <div class="dropdown">
+                    <ul>
+                        <li><a href="#">Gardening Tools</a></li>
+                        <li><a href="#">Power Tools</a></li>
+                        <li><a href="#">Hand Tools</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+<div id="filters">
+    <!-- Filter by Category -->
+    <label for="categoryFilter">Category:</label>
+    <select id="categoryFilter" onchange="applyFilters()">
+        <option value="all">All</option>
+        <option value="Seeds">Seeds</option>
+        <option value="Fertilizers">Fertilizers</option>
+        <option value="Pesticides">Pesticides</option>
+        <option value="Tools">Tools</option>
+    </select>
+
+    <!-- Filter by Brand -->
+    <label for="brandFilter">Brand:</label>
+    <select id="brandFilter" onchange="applyFilters()">
+        <option value="all">All</option>
+        <option value="Brand Y">IFFCO</option>
+        <option value="Brand Z">Rallis India</option>
+        <option value="Brand A1">Bharat Rasayan</option>
+        <option value="Brand A1">Godrej Agrovet</option>
+        <option value="Brand A1">UPL</option>
+        <option value="Brand A1">BASF India</option>
+        <!-- Add more brand options as needed -->
+    </select>
+
+    <!-- Sort by Price -->
+    <label for="priceSort">Sort by Price:</label>
+    <select id="priceSort" onchange="applyFilters()">
+        <option value="none">None</option>
+        <option value="low-to-high">Low to High</option>
+        <option value="high-to-low">High to Low</option>
+    </select>
+</div>
+
+   <section class="hero-2-section">
+    <div class="hero-2-content">
+        <h1 id="hero-2-heading">Experience the Best Agricultural Products</h1>
+        <p id="hero-2-description">Quality and sustainability for every farm.</p>
+        <a href="{% url 'product1' %}" class="cta-button">Discover More</a>
+    </div>
+</section>
+
+   <section class="featured-products">
+    <h3>Featured Products</h3>
+    <div class="product-list" id="productGrid">
+        <!-- Products will be injected here by JavaScript -->
+    </div>
+</section>
+
+<!-- Static URL for Django static files -->
+<div id="static-url" data-static-url="{% static '' %}"></div>
+
+<script>
+
+// JavaScript array of product objects
+const products = [
+    { id: 1, name: "Coragen", price: 100, image: "https://www.dayjoy.in/ProductImages/WhatsApp%20Image%202024-01-31%20at%205.42.18%20PM.jpeg", brand: "Godrej Agrovet", category: "Fertilizers", rating: 4 },
+    { id: 2, name: "Plant Growth Enhancer", price: 250, image: "https://rukminim2.flixcart.com/image/850/1000/xif0q/plant-sapling/g/7/b/yes-annual-yes-plant-growth-liquid-supplement-for-home-garden-original-imahfvgsgjh4fbja.jpeg?q=20&crop=false", brand: "Rallis India", category: "Seeds", rating: 5 },
+    { id: 3, name: "Garden Tiller", price: 300, image: "https://superhandyus.com/cdn/shop/files/superhandy-gas-garden-tiller-pro-7hp-209cc-27-tilling-width-guo093-new-fba-41713559929110.jpg?v=1705632138&width=800", brand: "IFFCO", category: "Tools", rating: 4 },
+    { id: 4, name: "Pesticide X", price: 150, image: "https://static.agrostar.in/static/AGS-CP-956_N2_1.jpg", brand: "BASF India", category: "Pesticides", rating: 3 },
+    { id: 5, name: "Organic Fertilizer", price: 180, image: "https://greenparadiselive.com/cdn/shop/products/GardenFoodOrganicFertilizerandManurebyPradhan_1Kg.jpg?v=1617882489&width=1920", brand: "Bharat Rasayan", category: "Fertilizers", rating: 5 },
+    { id: 6, name: "Garden Tools Set", price: 450, image: "https://images-cdn.ubuy.co.in/634ebd5960deca03846ed660-gardening-tools-garden-tools-set.jpg", brand: "UPL", category: "Tools", rating: 4 },
+    { id: 7, name: "Tomato Seeds", price: 80, image: "https://agribegri.com/productimage/560154791720874876.webp", brand: "BASF India", category: "Seeds", rating: 5 },
+    { id: 8, name: "Herbicide Y", price: 200, image: "https://www.swal.in/admin/uploads/product/140/861723014366Feego.jpg", brand: "Godrej Agrovet", category: "Pesticides", rating: 4 },
+    { id: 9, name: "Soil Conditioner", price: 300, image: "https://m.media-amazon.com/images/I/81xOHlAhHgL._AC_UF350,350_QL80_.jpg", brand: "Rallis India", category: "Fertilizers", rating: 4 },
+    { id: 10, name: "Garden Sprayer", price: 350, image: "https://images-cdn.ubuy.com.sa/652a5718c16ff2736750690c-deli-2-gallon-pump-pressure-sprayer.jpg", brand: "IFFCO", category: "Tools", rating: 4 },
+    { id: 11, name: "Seed Starter Kit", price: 120, image: "https://m.media-amazon.com/images/I/71B+mxhsU+L._AC_UF894,1000_QL80_.jpg", brand: "BASF India", category: "Seeds", rating: 5 },
+    { id: 12, name: "Plant Growth Enhancer", price: 250, image: "https://kartvart.in/cdn/shop/files/4907572640_1080x1080_5471b73c-ae02-4942-9cde-1b0e837cc082.webp?v=1724596956", brand: "Bharat Rasayan", category: "Fertilizers", rating: 5 },
+    { id: 13, name: "Lawn Mower", price: 450, image: "https://rukminim2.flixcart.com/image/850/1000/xif0q/lawn-mower/i/s/x/18-heavy-duty-139cc-4hp-18inch-lawn-mower-4-stoke-air-cooled-original-imah4ff84gwcbz9k.jpeg?q=20&crop=false", brand: "UPL", category: "Tools", rating: 4 },
+    { id: 14, name: "Insecticide A", price: 180, image: "https://farmkart.com/cdn/shop/articles/Ronfen_insecticide_1.webp?v=1725097017", brand: "Godrej Agrovet", category: "Pesticides", rating: 4 },
+    { id: 15, name: "Chili Seeds", price: 100, image: "https://www.agriplexindia.com/cdn/shop/files/Armour-F1-Hybrid-Chilli-Seeds.png?crop=center&height=645&v=1689157799&width=645", brand: "Rallis India", category: "Seeds", rating: 5 },
+    { id: 16, name: "Fungicide B", price: 220, image: "https://www.agriplexindia.com/cdn/shop/products/Rognash-B-01.png?crop=center&height=430&v=1691131722&width=430", brand: "IFFCO", category: "Pesticides", rating: 4 },
+    { id: 17, name: "Pesticide Spray", price: 150, image: "https://m.media-amazon.com/images/I/61Ezpt+d41L.jpg", brand: "BASF India", category: "Pesticides", rating: 3 },
+    { id: 18, name: "Bio Fertilizer", price: 180, image: "https://cpimg.tistatic.com/4543144/b/4/azotobacter-biofertilizer.jpg", brand: "Bharat Rasayan", category: "Fertilizers", rating: 4 },
+    { id: 19, name: "Greenhouse Plastic", price: 300, image: "https://images.thdstatic.com/productImages/add0af28-6734-4c91-ab49-53e967a071bb/svn/clear-vevor-tomato-cages-tmwsmyc12ft10y2hdv0-fa_600.jpg", brand: "UPL", category: "Tools", rating: 5 },
+    { id: 20, name: "Compost Manure", price: 200, image: "https://m.media-amazon.com/images/I/81XC5vBKQLL._AC_UF350,350_QL80_.jpg", brand: "Godrej Agrovet", category: "Fertilizers", rating: 4 },
+    { id: 21, name: "Hydroponic Kit", price: 500, image: "https://www.skorganicfarms.com/cdn/shop/products/image_7056496e-8e20-4e27-b0b7-c848427f39ad_1400x.jpg?v=1601534671", brand: "Rallis India", category: "Tools", rating: 5 },
+    { id: 22, name: "Flower Seeds Mix", price: 150, image: "https://m.media-amazon.com/images/I/81gmQSPpSrL.jpg", brand: "IFFCO", category: "Seeds", rating: 5 },
+    { id: 23, name: "Lime Fertilizer", price: 170, image: "https://images-cdn.ubuy.co.in/648eb331c3e8ea33f03e4e54-organic-dolomite-lime-made-in-usa.jpg", brand: "BASF India", category: "Fertilizers", rating: 4 },
+    { id: 24, name: "Garden Hoe", price: 120, image: "https://www.kisanshop.in/s/65f83b39d13b931b1c1f1a9b/6684513ce0ea810024603476/garden-nornal-hoe.jpg", brand: "Bharat Rasayan", category: "Tools", rating: 4 },
+    { id: 25, name: "Herbicide Z", price: 200, image: "https://friendofgardeners.eu/cdn/shop/files/480-1-1-kopia.jpg?v=1730869562&width=1946", brand: "UPL", category: "Pesticides", rating: 3 },
+    { id: 26, name: "Watering Can", price: 150, image: "https://m.media-amazon.com/images/I/61U9chhz7+L.jpg", brand: "Godrej Agrovet", category: "Tools", rating: 4 },
+    { id: 27, name: "Organic Compost", price: 250, image: "https://m.media-amazon.com/images/I/61MF3hG0k0L._AC_UF1000,1000_QL80_.jpg", brand: "Rallis India", category: "Fertilizers", rating: 5 },
+    { id: 28, name: "Corn Seeds", price: 100, image: "https://cdn.shopify.com/s/files/1/0722/2059/files/DSC09981-01_LahariPeddiReddy.jpg?v=1702637145", brand: "IFFCO", category: "Seeds", rating: 4 },
+    { id: 29, name: "Drip Irrigation System", price: 350, image: "https://bhagwatiplasticpipe.com/wp-content/uploads/2023/12/Drip-Irrigation.jpeg", brand: "BASF India", category: "Tools", rating: 5 },
+    { id: 30, name: "Hydroponic Nutrients", price: 150, image: "https://plantic.in/image/hydroponic4.jpg", brand: "Bharat Rasayan", category: "Fertilizers", rating: 4 },
+    { id: 30, name: "INDO US ONION PREMA-999 – 500 GM ", price: 860, image: "https://agripari.com/wp-content/uploads/2023/03/INDO-US-PREMA-999.jpg", brand: "Bharat Rasayan", category: "Fertilizers", rating: 4 }
+];
+
+
+
+// Load cart from localStorage or initialize as empty
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+// Function to dynamically render products on the page
+function renderProducts(productsToRender) {
+    const productGrid = document.getElementById("productGrid");
+    productGrid.innerHTML = ""; // Clear the grid before rendering
+
+    productsToRender.forEach(product => {
+        const productCard = document.createElement("div");
+        productCard.classList.add("product-item");
+
+        // Product Image
+        const img = document.createElement("img");
+        img.src = product.image;
+        img.alt = product.name;
+
+        // Product Title
+        const title = document.createElement("h4");
+        title.textContent = product.name;
+
+        // Product Price
+        const price = document.createElement("p");
+        price.textContent = `Price: ₹${product.price}`;
+
+        // Product Brand
+        const brand = document.createElement("p");
+        brand.textContent = `Brand: ${product.brand}`;
+
+        // Product Category
+        const category = document.createElement("p");
+        category.textContent = `Category: ${product.category}`;
+
+        // Product Rating
+        const rating = document.createElement("p");
+        rating.innerHTML = `Rating: ${"⭐".repeat(product.rating)} (${product.rating}/5)`;
+
+        // Add to Cart Button
+        const addToCartBtn = document.createElement("button");
+        addToCartBtn.textContent = "Add to Cart";
+        addToCartBtn.onclick = () => addToCart(product);
+
+        // Append elements to product card
+        productCard.append(img, title, price, brand, category, rating, addToCartBtn);
+
+        // Append product card to grid
+        productGrid.appendChild(productCard);
+    });
+}
+
+// Search products by name
+function searchProducts() {
+    const searchQuery = document.getElementById("searchBox").value.toLowerCase();
+    const searchedProducts = products.filter(product =>
+        product.name.toLowerCase().includes(searchQuery)
+    );
+    renderProducts(searchedProducts);
+}
+
+// Other functions like renderProducts, filterProducts, etc. remain the same
+
+window.onload = () => renderProducts(products);
+
+
+// Add item to the cart
+function addToCart(product) {
+    const existingProduct = cart.find(item => item.id === product.id);
+    if (existingProduct) {
+        existingProduct.quantity += 1;
+    } else {
+        cart.push({ ...product, quantity: 1 });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert("Your item has been added to the cart successfully!");
+    updateCartDetails();
+}
+
+// Update cart details
+function updateCartDetails() {
+    const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+    const totalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    console.log(`Total Items: ${totalItems}, Total Price: ₹${totalPrice}`);
+}
+
+function applyFilters() {
+    const categoryFilter = document.getElementById("categoryFilter").value;
+    const brandFilter = document.getElementById("brandFilter").value;
+    const priceSort = document.getElementById("priceSort").value;
+
+    let filteredProducts = [...products]; // Start with all products
+
+    // Filter by Category
+    if (categoryFilter !== "all") {
+        filteredProducts = filteredProducts.filter(product => product.category === categoryFilter);
+    }
+
+    // Filter by Brand
+    if (brandFilter !== "all") {
+        filteredProducts = filteredProducts.filter(product => product.brand === brandFilter);
+    }
+
+    // Sort by Price
+    if (priceSort === "low-to-high") {
+        filteredProducts.sort((a, b) => a.price - b.price);
+    } else if (priceSort === "high-to-low") {
+        filteredProducts.sort((a, b) => b.price - a.price);
+    }
+
+    // Re-render products
+    renderProducts(filteredProducts);
+}
+
+// Optional: Dynamically populate filter options
+function populateFilters() {
+    const categorySet = new Set(products.map(product => product.category));
+    const brandSet = new Set(products.map(product => product.brand));
+
+    const categoryFilter = document.getElementById("categoryFilter");
+    const brandFilter = document.getElementById("brandFilter");
+
+    // Clear existing filter options
+    categoryFilter.innerHTML = '<option value="all">All Categories</option>';
+    brandFilter.innerHTML = '<option value="all">All Brands</option>';
+
+    categorySet.forEach(category => {
+        const option = document.createElement("option");
+        option.value = category;
+        option.textContent = category;
+        categoryFilter.appendChild(option);
+    });
+
+    brandSet.forEach(brand => {
+        const option = document.createElement("option");
+        option.value = brand;
+        option.textContent = brand;
+        brandFilter.appendChild(option);
+    });
+}
+
+// Initialize with all products
+window.onload = () => {
+    renderProducts(products);
+    populateFilters(); // Populate filters dynamically
+};
+
+// Add event listeners for filters to apply changes
+document.getElementById("categoryFilter").addEventListener("change", applyFilters);
+document.getElementById("brandFilter").addEventListener("change", applyFilters);
+document.getElementById("priceSort").addEventListener("change", applyFilters);
+
+</script>
+
+    <section class="features">
+            <div class="feature-item">
+                <img src="https://media.istockphoto.com/id/1175303918/vector/like-icon-vector-design.jpg?s=612x612&w=0&k=20&c=3dFZEggnAyodAcj9sSnnUvSZ69LQbE9kZof7vgGvAgs=" alt="Best Quality Icon" class="feature-icon">
+                <h3>Best Quality</h3>
+                <p>Assured Genuine Products from Trusted well-known Brands of India</p>
+            </div>
+            <div class="feature-item">
+                <img src="https://static-00.iconduck.com/assets.00/cash-on-delivery-icon-1024x345-7sgjf338.png" alt="Cash On Delivery Icon" class="feature-icon">
+                <h3>Cash On Delivery</h3>
+                <p>Ease to Pay Cash Payment for your parcel when you received</p>
+            </div>
+            <div class="feature-item">
+                <img src="https://as1.ftcdn.net/v2/jpg/00/91/81/02/1000_F_91810254_RUHg9VGoLvzQn4XyzZawkjx8seDFoYS6.jpg" alt="Fast Delivery Icon" class="feature-icon">
+                <h3>Fast Delivery</h3>
+                <p>Your Order is very prior to us, we deliver it faster as much we can.</p>
+            </div>
+        </section>
+    </main>
+
+   <button id="goTopButton" onclick="scrollToTop()" style="display: none; position: fixed; bottom: 30px; right: 30px; background-color: #333; color: white; border: none; padding: 10px 20px; border-radius: 50%; cursor: pointer; font-size: 16px;">
+        ↑
+    </button>
+
+<i class="fa-solid fa-cart-plus"></i>
+<i class="fa-duotone fa-solid fa-arrow-up-to-line"></i>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section contact-info">
+                <div class="app-links">
+                    <a href="https://play.google.com/store" target="_blank">
+                        <img src="https://freeiconshop.com/wp-content/uploads/edd/google-play-badge.png" alt="Google Play">
+                    </a>
+                    <a href="https://apps.apple.com" target="_blank">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCc4oVhDr6YLwOevhdFZF8H1ZOIVXU5t1Krg&s" alt="App Store">
+                    </a>
+                </div>
+            </div>
+            <div class="footer-section policies">
+                <h3>OUR POLICIES</h3>
+                <ul>
+
+                    <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
+                    <li><a href="#">Shipping & Delivery Policy</a></li>
+                    <li><a href="{% url 'cancellation_policy' %}">Cancellation Policy</a></li>
+                    <li><a href="{% url 'return_policy' %}">Return Policy</a></li>
+                    <li><a href="{% url 'terms_of_use' %}">Terms of Use</a></li>
+                    <li><a href="{% url 'seller_terms' %}">Seller Terms and Conditions</a></li>
+                </ul>
+            </div>
+            <div class="footer-section links">
+                <h3>USEFUL LINKS</h3>
+                <ul>
+                    <li><a href="{% url 'about_us' %}">About us</a></li>
+                    <li><a href="#">Contact us</a></li>
+                    <li><a href="{% url 'faq' %}">FAQ</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 Agri Farm. All rights reserved.</p>
+        </div>
+    </footer>
+
+   <script>
+  function toggleNav() {
+    var nav = document.querySelector('header nav ul');
+    nav.classList.toggle('active');
+  }
+</script>
+
+<style>
+/* style.css */
+@media screen and (max-width: 600px) {
+    /* Mobile Nav */
+    .hamburger-menu {
+        display: block;
+    }
+
+    .mobile-nav ul {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .mobile-nav li {
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    header nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    header nav ul li {
+        padding: 10px 0;
+    }
+
+    .hero {
+        height: 35vh;
+    }
+
+    .product-item {
+        width: 100%;
+        margin: 10px 0;
+    }
+
+    .cta-button {
+        width: 100%;
+    }
+
+    .features {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #searchInput {
+        width: 80%;
+        padding: 10px;
+    }
+}
+
+  /* Toggle button for mobile */
+  .hamburger-menu {
+    display: none; /* Hide hamburger on larger screens */
+    cursor: pointer;
+    font-size: 30px;
+    padding: 10px;
+  }
+
+  @media (max-width: 600px) {
+    .hamburger-menu {
+      display: block;
+    }
+  }
+@media screen and (max-width: 600px) {
+    .mobile-nav ul {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .mobile-nav li {
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    header nav ul {
+        flex-direction: column;
+    }
+
+    .hero {
+        height: 35vh; /* Reduced height for smaller screens */
+    }
+
+    .product-item {
+        width: 100%; /* Full width for product items */
+        margin: 10px 0;
+    }
+
+    .cta-button {
+        width: 100%; /* Make the CTA button full-width on mobile */
+    }
+
+    .features {
+        grid-template-columns: 1fr; /* Stack feature items in one column */
+    }
+}
+header {
+    background-color: #1b3d3c;
+    padding: 0.5rem;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+header nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+header nav ul li {
+    margin: 0 20px;
+}
+
+header nav ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 200;
+    transition: color 0.3s ease;
+}
+
+header nav ul li a:hover {
+    color: #57bfff;
+}
+
+@media screen and (max-width: 600px) {
+    header nav ul {
+        flex-direction: column; /* Stack items vertically */
+        align-items: center; /* Center-align the menu items */
+    }
+
+    header nav ul li {
+        padding: 10px 0; /* Adjust padding for vertical stack */
+    }
+}
+/* Hero section */
+.hero {
+    position: relative;
+    background-size: cover;
+    background-position: center center;
+    color: #1b3d3c;
+    text-align: center;
+    padding: 5em 2em;
+    height: 50vh;
+    overflow: hidden;
+    transition: background-image 1s ease-in-out;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero h1 {
+    font-size: 2em;
+    margin-bottom: 1em;
+}
+
+.hero p {
+    font-size: 1.2em;
+}
+
+/* Define some key background images */
+.hero-1 {
+    background-image: url('https://ninetheme.com/themes/agro/wp-content/uploads/2019/12/home-shop-2.jpg');
+}
+
+.hero-2 {
+    background-image: url('https://ninetheme.com/themes/agro/wp-content/uploads/2019/12/home-shop-1.jpg');
+}
+
+.hero-3 {
+    background-image: url('https://images.pexels.com/photos/1640774/pexels-photo-1640774.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+}
+
+.hero-4 {
+    background-image: url('https://images.pexels.com/photos/1028599/pexels-photo-1028599.jpeg');
+}
+
+.hero-5 {
+    background-image: url('https://images.unsplash.com/photo-1605210055791-6c1ebc17f718?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+}
+
+.hero-6 {
+    background-image: url('https://images.unsplash.com/photo-1454944338482-a69bb95894af?q=80&w=2073&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+}
+
+.hero-7 {
+    background-image: url('https://cdn.pixabay.com/photo/2024/04/06/14/18/ai-generated-8679407_1280.png');
+}
+
+/* Call to Action button */
+.cta-button {
+    background-color: #1b3d3c;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 20px;
+}
+
+.cta-button:hover {
+    background-color: #1b3d3c;
+}
+
+/* Featured Products Section */
+.featured-products {
+    background-color: #fff;
+    padding: 40px 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    margin: 40px auto;
+    max-width: 1200px;
+    border-radius: 15px;
+}
+
+/* Title Styling */
+.featured-products h3 {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+/* Product List Layout */
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    justify-items: center;
+}
+
+/* Individual Product Card */
+.product-item {
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 15px;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+    text-align: center;
+    overflow: hidden;
+    border: 1px solid #ddd;
+}
+
+/* Hover Effects for Product Item */
+.product-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    border: 1px solid #28a745;
+}
+
+/* Featured Product Styling */
+.product-item.featured {
+    border: 2px solid #28a745;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Product Image */
+.product-item img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.product-item img:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+}
+
+/* Product Title */
+.product-item h4 {
+    font-size: 1.3em;
+    color: #333;
+    margin-top: 15px;
+    font-weight: 600;
+}
+
+/* Product Price */
+.product-item p {
+    font-size: 1.1em;
+    color: #666;
+    margin: 10px 0;
+    font-weight: 500;
+}
+
+/* Add to Cart Button */
+.product-item button {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.product-item button:hover {
+    background-color: #218838;
+    transform: translateY(-3px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .product-list {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+
+    .featured-products {
+        padding: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .featured-products {
+        padding: 15px;
+    }
+
+    .product-item {
+        padding: 12px;
+    }
+
+    .product-item h4 {
+        font-size: 1em;
+    }
+
+    .product-item p {
+        font-size: 0.9em;
+    }
+
+    .product-item button {
+        font-size: 0.9em;
+    }
+}
+/* Footer Styles */
+footer {
+    text-align: center;
+    padding: 5px 7px;
+    background-color: #1b3d3c;
+    color: white;
+    font-size: 12px;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1000px;
+    margin: auto;
+    padding-bottom: 7px;
+}
+
+.footer-section {
+    width: 30%;
+}
+
+.footer-section h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.footer-section ul {
+    padding: 0;
+    list-style: none;
+}
+
+.footer-section ul li {
+    margin-bottom: 8px;
+}
+
+.footer-section a {
+    text-decoration: none;
+    color: white;
+    font-size: 14px;
+}
+
+.footer-section a:hover {
+    text-decoration: underline;
+}
+
+.app-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.app-links img {
+    width: 120px;
+    margin: 8px 0;
+}
+
+/* Search Bar */
+#searchBox {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    font-size: 16px;
+    margin: 20px auto;
+    border: 2px solid #ccc;
+    border-radius: 25px;
+    background-color: #f9f9f9;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+}
+
+#searchBox:focus {
+    border-color: #007bff;
+    background-color: #fff;
+}
+
+/* Dropdown menu */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 150px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    text-align: left;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    border-radius: 5px;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.3s ease, padding-left 0.3s ease;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+    padding-left: 1.5rem;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+.dropdown-content a i {
+    margin-right: 0.5rem;
+}
+
+/* Center Categories Section */
+.categories {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.category-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.category-item {
+    position: relative;
+    font-size: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.category-item a {
+    color: #1b3d3c;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.category-item a:hover {
+    color: #4CAF50;
+    transform: scale(1.05);
+}
+
+.category-item .dropdown {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 200px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 1rem;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+
+/* Show dropdown menu on hover */
+.category-item:hover .dropdown {
+    display: block;
+}
+
+/* Filters Section */
+#filters {
+    margin: 20px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#filters label {
+    font-weight: bold;
+    margin-right: 10px;
+    color: #333;
+}
+
+#filters select {
+    padding: 8px;
+    margin: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+#filters select:focus {
+    outline: none;
+    border-color: #007bff;
+}
+/* Product Grid */
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+    #filters {
+        margin: 10px;
+        padding: 10px;
+    }
+
+    #filters select {
+        width: 100%;
+    }
+
+    #productGrid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    .product-item {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    #filters {
+        margin: 5px;
+        padding: 8px;
+    }
+
+    #filters select {
+        width: 100%;
+    }
+
+    #productGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.features {
+    margin-top: 100px;
+    display: flex;
+    justify-content: space-around; /* Space items evenly */
+    padding: 40px 20px;
+    background-color: #f9f9f9; /* Light background */
+}
+
+.feature-item {
+    text-align: center; /* Center align text */
+    max-width: 300px; /* Limit width of each feature box */
+    padding: 20px; /* Padding inside each feature */
+    border: 2px solid #1b3d3c; /* Border color */
+    border-radius: 10px; /* Rounded corners */
+    background-color: white; /* White background for each box */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.feature-icon {
+    width: 50px; /* Icon width */
+    height: auto; /* Maintain aspect ratio */
+    margin-bottom: 10px; /* Space between icon and text */
+}
+
+.feature-item h3 {
+    color: #1b3d3c; /* Title color */
+    font-weight: bold; /* Bold text */
+}
+
+.feature-item p {
+    color: #555; /* Text color */
+}
+
+/* Second Hero section */
+.hero-2-section {
+    position: relative;
+    background-size: cover;
+    background-position: center center;
+    color: #fff;
+    text-align: center;
+    padding: 4em 2em;
+    height: 25vh;
+    overflow: hidden;
+    transition: background-image 1s ease-in-out;
+}
+
+.hero-2-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-2-content h1 {
+    font-size: 2em;
+    margin-bottom: 1em;
+}
+
+.hero-2-content p {
+    font-size: 1.2em;
+}
+
+/* Define background images for the second hero section */
+.hero-2-1 {
+    background-image: url('https://images.pexels.com/photos/2923157/pexels-photo-2923157.jpeg');
+}
+
+.hero-2-2 {
+    background-image: url('https://c8.alamy.com/comp/WAY5PE/word-agriculture-on-the-background-of-a-carrot-leaves-plantation-agriculture-and-growing-vegetables-increase-productivity-and-reduce-costs-traditio-WAY5PE.jpg');
+}
+
+.hero-2-3 {
+    background-image: url('https://ajaybiotech.com/images/banner-blog-products.jpg');
+}
+
+.hero-2-4 {
+    background-image: url('https://5.imimg.com/data5/SELLER/Default/2023/10/350520637/UV/LM/YV/67716039/chemical-pesticides.jpeg');
+}
+
+
+</style>
+
+<script>
+   let currentImage = 0; // Start with the first image
+const heroSection = document.querySelector('.hero');
+const heroHeading = document.getElementById('hero-heading');
+const heroDescription = document.getElementById('hero-description');
+
+const content = [
+    {
+        imageClass: 'hero-1',
+        heading: 'Welcome to Our E-Commerce Site',
+        description: 'Explore a wide range of products'
+    },
+    {
+        imageClass: 'hero-2',
+        heading: 'Get Exclusive Deals',
+        description: 'Shop our latest collection and save big!'
+    },
+    {
+        imageClass: 'hero-3',
+        heading: 'Top Quality Products Just for You',
+        description: 'Browse our premium selection now!'
+    },
+    {
+        imageClass: 'hero-4',
+        heading: 'Top Quality Products Just for You',
+        description: 'Browse our premium selection now!'
+    },
+     {
+        imageClass: 'hero-5',
+        heading: 'Top Quality Products Just for You',
+        description: 'Browse our premium selection now!'
+    },
+     {
+        imageClass: 'hero-6',
+        heading: 'Top Quality Products Just for You',
+        description: 'Browse our premium selection now!'
+    },
+    {
+        imageClass: 'hero-7',
+        heading: 'Top Quality Products Just for You',
+        description: 'Browse our premium selection now!'
+    }
+];
+
+function changeBackgroundAndText() {
+    // Update the index to move to the next image
+    currentImage = (currentImage + 1) % content.length; // Cycle through the images (0, 1, 2)
+
+    // Remove current image class and add the next one
+    heroSection.classList.remove('hero-1', 'hero-2', 'hero-3', 'hero-4', 'hero-5', 'hero-6', 'hero-7');
+    heroSection.classList.add(content[currentImage].imageClass);
+
+    // Update the heading and description based on the new content
+    heroHeading.textContent = content[currentImage].heading;
+    heroDescription.textContent = content[currentImage].description;
+}
+
+// Set interval to change image and content every 5 seconds
+setInterval(changeBackgroundAndText, 5000);
+
+// Initialize the first background and content
+changeBackgroundAndText();
+</script>
+
+<script>
+   let currentImage2 = 0; // Start with the first image
+   const heroSection2 = document.querySelector('.hero-2-section');
+   const heroHeading2 = document.getElementById('hero-2-heading');
+   const heroDescription2 = document.getElementById('hero-2-description');
+
+   const content2 = [
+       {
+           imageClass: 'hero-2-1',
+           heading: 'Experience the Best Agricultural Products',
+           description: 'Quality and sustainability for every farm.'
+       },
+       {
+           imageClass: 'hero-2-2',
+           heading: 'Innovate Your Farm Today',
+           description: 'Tools and resources for modern agriculture.'
+       },
+       {
+           imageClass: 'hero-2-3',
+           heading: 'Sow the Seeds of Success',
+           description: 'Find the best seeds for your crops.'
+       },
+       {
+           imageClass: 'hero-2-4',
+           heading: 'Grow with Confidence',
+           description: 'Trusted products for all your farming needs.'
+       }
+   ];
+
+   function changeBackgroundAndText2() {
+       // Update the index to move to the next image
+       currentImage2 = (currentImage2 + 1) % content2.length;
+
+       // Remove current image class and add the next one
+       heroSection2.classList.remove('hero-2-1', 'hero-2-2', 'hero-2-3', 'hero-2-4');
+       heroSection2.classList.add(content2[currentImage2].imageClass);
+
+       // Update the heading and description based on the new content
+       heroHeading2.textContent = content2[currentImage2].heading;
+       heroDescription2.textContent = content2[currentImage2].description;
+   }
+
+   // Set interval to change image and content every 5 seconds
+   setInterval(changeBackgroundAndText2, 5000);
+
+   // Initialize the first background and content
+   changeBackgroundAndText2();
+</script>
+
+ <script>
+        // Function to simulate dynamic price update
+        function updatePrice(product) {
+            const dynamicPrice = product.price + Math.floor(Math.random() * 50); // Random price fluctuation
+            return dynamicPrice;
+        }
+
+        // Show or hide the "Go to Top" button based on scroll position
+        window.onscroll = function() { toggleGoTopButton() };
+
+        function toggleGoTopButton() {
+            const goTopButton = document.getElementById("goTopButton");
+            if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+                goTopButton.style.display = "block"; // Show the button
+            } else {
+                goTopButton.style.display = "none"; // Hide the button
+            }
+        }
+
+        // Smooth scroll to top function
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+
+<script>
+        // Function to simulate dynamic price update
+        function updatePrice(product) {
+            const dynamicPrice = product.price + Math.floor(Math.random() * 50); // Random price fluctuation
+            return dynamicPrice;
+        }
+
+        // Show or hide the "Go to Top" button based on scroll position
+        window.onscroll = function() { toggleGoTopButton() };
+
+        function toggleGoTopButton() {
+            const goTopButton = document.getElementById("goTopButton");
+            if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+                goTopButton.style.display = "block"; // Show the button
+            } else {
+                goTopButton.style.display = "none"; // Hide the button
+            }
+        }
+
+        // Smooth scroll to top function
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    </script>

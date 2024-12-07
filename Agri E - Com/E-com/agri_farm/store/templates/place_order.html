@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="checkout-container">
+    <h2>Checkout</h2>
+
+    {% load custom_filters %}
+
+    <!-- Billing Details Form -->
+    <form method="POST" action="{% url 'checkout' %}" id="billingForm">
+      {% csrf_token %}
+      <div class="billing-details">
+        <h3>Billing Details</h3>
+
+        <label for="first_name">First Name</label>
+        <input type="text" name="first_name" id="first_name" required><br>
+
+        <label for="last_name">Last Name</label>
+        <input type="text" name="last_name" id="last_name" required><br>
+
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" required><br>
+
+        <label for="phone">Phone Number</label>
+        <input type="text" name="phone" id="phone" required><br>
+
+        <label for="address">Address</label>
+        <textarea name="address" id="address" required></textarea><br>
+
+        <label for="state">State / Country</label>
+        <select name="state" id="state" required>
+          <option value="">Select State</option>
+          {% for state in states %}
+            <option value="{{ state }}">{{ state }}</option>
+          {% endfor %}
+        </select><br>
+
+        <label for="postal_code">Postal Code</label>
+        <input type="text" name="postal_code" id="postal_code" required><br>
+      </div>
+    </form>
+
+    <!-- Order Details Form -->
+    <form method="POST" action="{% url 'order_summary' %}" id="orderDetailsForm">
+      {% csrf_token %}
+
+      <!-- Cart Summary -->
+      <div class="cart-summary">
+        <h3>Your Cart</h3>
+        <ul>
+          {% for item in cart_items %}
+            <li>
+              {{ item.product_name }} - ₹{{ item.product_price }} x {{ item.quantity }} = ₹{{ item.product_price|multiply:item.quantity }}
+            </li>
+          {% endfor %}
+        </ul>
+        <p><strong>Total Price:</strong> ₹{{ total_price }}</p>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="place-order-button">
+        <button type="submit" id="placeOrderBtn">Place Order</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- JavaScript for Animations (Optional) -->
+  <script>
+    document.getElementById('placeOrderBtn').addEventListener('click', function(event) {
+      event.preventDefault();  // Prevent the default form submission
+      var placeOrderBtn = this;
+      placeOrderBtn.innerHTML = 'Processing...'; // Change button text during form submission
+      placeOrderBtn.disabled = true; // Disable the button to prevent multiple clicks
+
+      // Submit the form after 2 seconds (simulating processing time)
+      setTimeout(function() {
+        // Submit the order details form after the animation delay
+        document.getElementById('orderDetailsForm').submit();
+      }, 2000); // Adjust the time if necessary
+    });
+  </script>
+
+  <!-- CSS Animations -->
+  <style>
+    .checkout-container {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .billing-details, .cart-summary {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .place-order-button button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .place-order-button button:hover {
+      background-color: #45a049;
+    }
+
+    .place-order-button button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    /* Simple Animation for form fields */
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #4CAF50;
+      outline: none;
+    }
+
+    /* Animate Button */
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .place-order-button button:active {
+      animation: pulse 0.3s ease-in-out;
+    }
+  </style>
+{% endblock %}

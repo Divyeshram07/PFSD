@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script>
+        // Function to simulate dynamic price update
+        function updatePrice(product) {
+            // You could replace this with actual dynamic pricing logic (e.g., currency conversion)
+            const dynamicPrice = product.price + Math.floor(Math.random() * 50); // Random price fluctuation
+            return dynamicPrice;
+        }
+    </script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <h1>Agri Farm</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/cart">Cart</a></li>
+                <li><input type="text" id="searchBox" placeholder="Search..." onkeyup="searchProducts()"></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Filters Section -->
+    <div class="filters">
+        <select id="brandFilter" onchange="filterProducts()">
+            <option value="">All Brands</option>
+            <option value="IFFCO">IFFCO</option>
+            <option value="Rallis India">Rallis India</option>
+            <option value="Bharat Rasayan">Bharat Rasayan</option>
+            <option value="Godrej Agrovet">Godrej Agrovet</option>
+            <option value=" UPL"> UPL</option>
+            <option value="BASF India">BASF India</option>
+        </select>
+
+        <select id="categoryFilter" onchange="filterProducts()">
+            <option value="">All Categories</option>
+            <option value="Fertilizers">Fertilizers</option>
+            <option value="Seeds">Seeds</option>
+            <option value="Tools">Tools</option>
+            <option value="Pesticides">Pesticides</option>
+        </select>
+
+        <select id="sortFilter" onchange="sortProducts()">
+            <option value="">Sort By</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+            <option value="name">Name</option>
+        </select>
+    </div>
+
+     <section class="categories">
+    <h3>Categories</h3>
+    <div class="category-list">
+        <div class="category-item">
+            <a href="#">Seeds</a>
+            <div class="dropdown">
+                <ul>
+                    <li><a href="#">VEGETABLE SEEDS</a></li>
+                    <li><a href="#">BOTTLE GOURD SEEDS</a></li>
+                    <li><a href="#">CUCUMBER SEEDS</a></li>
+                    <li><a href="#">BRINJAL SEEDS</a></li>
+                    <li><a href="#">TOMATO SEEDS</a></li>
+                    <li><a href="#">CARROT SEEDS</a></li>
+                    <li><a href="#">CHILLY SEEDS</a></li>
+                    <li><a href="#">BEET ROOT SEEDS</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="category-item">
+            <a href="#">Fertilizers</a>
+            <div class="dropdown">
+                <ul>
+                    <li><a href="#">Liquid Fertilizers</a></li>
+                    <li><a href="#">Organic Fertilizers</a></li>
+                    <li><a href="#">Granular Fertilizers</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="category-item">
+            <a href="#">Pesticides</a>
+            <div class="dropdown">
+                <ul>
+                    <li><a href="#">Insecticides</a></li>
+                    <li><a href="#">Herbicides</a></li>
+                    <li><a href="#">Fungicides</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="category-item">
+            <a href="#">Tools</a>
+            <div class="dropdown">
+                <ul>
+                    <li><a href="#">Gardening Tools</a></li>
+                    <li><a href="#">Power Tools</a></li>
+                    <li><a href="#">Hand Tools</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+   <section class="hero-2-section">
+    <div class="hero-2-content">
+        <h1 id="hero-2-heading">Experience the Best Agricultural Products</h1>
+        <p id="hero-2-description">Quality and sustainability for every farm.</p>
+        <a href="{% url 'product1' %}" class="cta-button">Discover More</a>
+
+    </div>
+</section>
+
+    <!-- Products Section -->
+    <div class="products-container">
+        <h1>Our Products</h1>
+        <div class="product-grid" id="productGrid">
+            <!-- Products will be injected here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Pass static path dynamically to JavaScript -->
+    <div id="static-url" data-static-url="{% static '' %}"></div>
+
+    <button id="goTopButton" onclick="scrollToTop()" style="display: none; position: fixed; bottom: 30px; right: 30px; background-color: #333; color: white; border: none; padding: 10px 20px; border-radius: 50%; cursor: pointer; font-size: 16px;">
+        ↑
+    </button>
+
+ <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section contact-info">
+                <div class="app-links">
+                    <a href="https://play.google.com/store" target="_blank">
+                        <img src="https://freeiconshop.com/wp-content/uploads/edd/google-play-badge.png" alt="Google Play">
+                    </a>
+                    <a href="https://apps.apple.com" target="_blank">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCc4oVhDr6YLwOevhdFZF8H1ZOIVXU5t1Krg&s" alt="App Store">
+                    </a>
+                </div>
+            </div>
+            <div class="footer-section policies">
+                <h3>OUR POLICIES</h3>
+                <ul>
+                     <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
+                    <li><a href="#">Shipping & Delivery Policy</a></li>
+                    <li><a href="{% url 'cancellation_policy' %}">Cancellation Policy</a></li>
+                    <li><a href="{% url 'return_policy' %}">Return Policy</a></li>
+                    <li><a href="{% url 'terms_of_use' %}">Terms of Use</a></li>
+                    <li><a href="{% url 'seller_terms' %}">Seller Terms and Conditions</a></li>
+                </ul>
+            </div>
+            <div class="footer-section links">
+                <h3>USEFUL LINKS</h3>
+                <ul>
+                   <li><a href="{% url 'about_us' %}">About us</a></li>
+                    <li><a href="#">Contact us</a></li>
+                    <li><a href="{% url 'faq' %}">FAQ</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 Agri Farm. All rights reserved.</p>
+        </div>
+    </footer>
+
+
+</body>
+</html>
+<style>
+/* Global Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.5s ease;
+}
+
+/* Header Styles */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1b3d3c;
+    padding: 5px 15px;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+header .logo img {
+    height: 50px;
+    transition: transform 0.3s ease;
+}
+
+header .logo img:hover {
+    transform: scale(1.1);
+}
+
+header nav ul {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+}
+
+header nav ul li {
+    font-size: 1.2rem;
+}
+
+header nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+header nav ul li a:hover {
+    color: #ffcc00;
+}
+
+header nav ul li input {
+    padding: 8px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+header nav ul li input:focus {
+    background-color: #fff;
+}
+
+/* Filters Section */
+.filters {
+    display: flex;
+    justify-content: space-between;
+    margin: 30px auto;
+    max-width: 1200px;
+    padding: 15px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.filters select {
+    padding: 12px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+}
+
+.filters select:hover {
+    background-color: #f0f0f0;
+}
+
+/* Products Section */
+.products-container {
+    padding: 30px;
+    background-color: #fff;
+    text-align: center;
+}
+
+.products-container h1 {
+    font-size: 2.5rem;
+    color: #1b3d3c;
+    margin-bottom: 30px;
+    animation: fadeIn 1s ease-out;
+}
+
+/* Product Grid */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));  /* Adjusted to smaller items */
+    gap: 20px;
+    justify-items: center;
+    animation: fadeInUp 1s ease-out;
+}
+
+.product-card {
+    background-color: #fff;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 230px; /* Reduced card width */
+    padding: 12px;  /* Reduced padding */
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0;
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+.product-card:nth-child(even) {
+    animation-delay: 0.2s;
+}
+
+.product-card:nth-child(odd) {
+    animation-delay: 0.4s;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.product-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover img {
+    transform: scale(1.05);
+}
+
+.product-card h2 {
+    font-size: 1rem;  /* Smaller title */
+    color: #264653;
+    margin: 8px 0;  /* Reduced margin */
+    transition: color 0.3s ease;
+}
+
+.product-card:hover h2 {
+    color: #2a9d8f;
+}
+
+.product-card p {
+    font-size: 0.85rem; /* Smaller description */
+    color: #555;
+    margin: 8px 0 12px;  /* Reduced margin */
+    transition: color 0.3s ease;
+}
+
+.product-card:hover p {
+    color: #57bfff;
+}
+
+.product-card button {
+    background-color: #28a745;
+    color: #fff;
+    padding: 8px 15px;  /* Smaller button padding */
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 0.9rem;  /* Smaller font size */
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s ease;
+}
+
+.product-card button:hover {
+    background-color: #36b1fd;
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Categories Section */
+.categories {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.category-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.category-item {
+    position: relative;
+    font-size: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.category-item a {
+    color: #072f54;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.category-item a:hover {
+    color: #4CAF50;
+    transform: scale(1.05);
+}
+
+.category-item .dropdown {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 200px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 1rem;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+
+/* Show dropdown menu on hover */
+.category-item:hover .dropdown {
+    display: block;
+}
+
+/* Product Hover Effects */
+.product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Button Hover Effects */
+.product-card button:hover {
+    background-color: #36b1fd;
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+footer {
+    text-align: center;
+    padding: 5px 7px;
+    background-color: #1b3d3c;
+    color: white;
+    font-size: 12px;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1000px;
+    margin: auto;
+    padding-bottom: 7px;
+}
+
+.footer-section {
+    width: 30%;
+}
+
+.footer-section h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.footer-section ul {
+    padding: 0;
+    list-style: none;
+}
+
+.footer-section ul li {
+    margin-bottom: 8px;
+}
+
+.footer-section a {
+    text-decoration: none;
+    color: white;
+    font-size: 14px;
+}
+
+.footer-section a:hover {
+    text-decoration: underline;
+}
+
+.app-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.app-links img {
+    width: 120px;
+    margin: 8px 0;
+}
+
+
+.hero-2-section {
+    position: relative;
+    background-size: cover;
+    background-position: center center;
+    color: #fff;
+    text-align: center;
+    padding: 4em 2em;
+    height: 20vh;
+    overflow: hidden;
+    transition: background-image 1s ease-in-out;
+}
+
+.hero-2-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-2-content h1 {
+    font-size: 2em;
+    margin-bottom: 1em;
+}
+
+.hero-2-content p {
+    font-size: 1.2em;
+}
+
+/* Define background images for the second hero section */
+.hero-2-1 {
+    background-image: url('https://images.pexels.com/photos/2923157/pexels-photo-2923157.jpeg');
+}
+
+.hero-2-2 {
+    background-image: url('https://images.pexels.com/photos/1640774/pexels-photo-1640774.jpeg');
+}
+
+.hero-2-3 {
+    background-image: url('https://images.pexels.com/photos/1028599/pexels-photo-1028599.jpeg');
+}
+
+.hero-2-4 {
+    background-image: url('https://images.pexels.com/photos/135620/pexels-photo-135620.jpeg');
+}
+
+
+</style>
+
+
+ <script>
+        // JavaScript array of product objects
+     const products = [
+    { id: 1, name: "Coragen", price: 600, image: "https://kisankavikas.com/wp-content/uploads/2024/07/Coragen_1-scaled.webp", brand: "Godrej Agrovet", category: "Fertilizers", rating: 4 },
+    { id: 2, name: "Carrot Seeds", price: 250, image: "https://indianjadibooti.com/Jadistore/image/catalog/IJB-Final-Phot%20os-1000-1000/Edible-Carrot-Seeds.jpg", brand: "Rallis India", category: "Seeds", rating: 5 },
+    { id: 3, name: "Liquid Fertilizer", price: 300, image: "https://plantic.in/pimg/plantic-all-in-one/plantic-all-in-one2.jpg", brand: "IFFCO", category: "Tools", rating: 3 },
+    { id: 4, name: "Pesticide X", price: 150, image: "https://agribegri.com/productimage/1814008771712135329.webp", brand: "BASF India", category: "Pesticides", rating: 4 },
+    { id: 5, name: "Organic Fertilizer", price: 180, image: "https://5.imimg.com/data5/SELLER/Default/2023/3/294725080/AX/HJ/VV/3747077/bharat-custom-fungicides-1000x1000.jpg", brand: "Bharat Rasayan", category: "Fertilizers", rating: 5 },
+    { id: 6, name: "Garden Tools Set", price: 450, image: "https://m.media-amazon.com/images/I/71bDTXVtaiL.jpg", brand: "UPL", category: "Tools", rating: 4 },
+    { id: 7, name: "Tomato Seeds", price: 80, image: "https://cultree.in/cdn/shop/files/Aahan12_1.jpg?v=1699950014", brand: "BASF India", category: "Seeds", rating: 3 },
+    { id: 8, name: "Herbicide Y", price: 200, image: "https://www.imageforweeds.com/-/media/Project/OneWeb/ImageForWeeds/Images/products/2021/KillsNutsedgeRTS_32oz.png", brand: "Godrej Agrovet", category: "Pesticides", rating: 4 },
+    { id: 9, name: "Soil Conditioner", price: 300, image: "https://www.rallis.com/Upload/Images/thumbnail/Geogreen-plus-thumb.png", brand: "Rallis India", category: "Fertilizers", rating: 4 },
+    { id: 10, name: "Garden Sprayer", price: 350, image: "https://m.media-amazon.com/images/I/71J41DOhI3L._AC_UF1000,1000_QL80_.jpg", brand: "IFFCO", category: "Tools", rating: 5 },
+    { id: 11, name: "Seed Starter Kit", price: 120, image: "https://m.media-amazon.com/images/I/81ga-iwaCcL._AC_UF894,1000_QL80_.jpg", brand: "BASF India", category: "Seeds", rating: 4 },
+    { id: 12, name: "Plant Growth Enhancer", price: 250, image: "https://ecocrest.in/cdn/shop/files/Edited_Ecoagra_website_graphic_1_1200x1200.png?v=1726046848", brand: "Bharat Rasayan", category: "Fertilizers", rating: 5 },
+    { id: 13, name: "Hydroponic Kit", price: 600, image: "https://m.media-amazon.com/images/I/71EkOUQxMhL.jpg", brand: "UPL", category: "Tools", rating: 5 },
+    { id: 14, name: "Compost Manure", price: 200, image: "https://shehrikisaan.com/wp-content/uploads/2023/05/Bio-Manure-1100-x-1100-px-with-shadow-and-white-background.jpg", brand: "Godrej Agrovet", category: "Fertilizers", rating: 4 },
+    { id: 15, name: "Greenhouse Net", price: 550, image: "https://image.made-in-china.com/2f0j00ImnhaksPlKgB/HDPE-Plastic-Green-Flat-Tape-Net-Agricultural-Shade-Net-for-Greenhouse.webp", brand: "Rallis India", category: "Tools", rating: 4 },
+    // Additional Vegetable Seeds
+    { id: 16, name: "Bottle Gourd Seeds", price: 60, image: "https://www.urbanplant.in/cdn/shop/files/BottleGourdLongcopy.webp?v=1686578622", brand: "BASF India", category: "Seeds", rating: 4 },
+    { id: 17, name: "Cucumber Seeds", price: 70, image: "https://www.agriplexindia.com/cdn/shop/files/Syngenta-Glossy-Cucumber-Seeds.png?crop=center&height=500&v=1689311328&width=600", brand: "Bharat Rasayan", category: "Seeds", rating: 5 },
+    { id: 18, name: "Brinjal Seeds", price: 90, image: "https://5.imimg.com/data5/ECOM/Default/2023/9/348680579/VT/BN/MX/11500074/1696013430607-ppl086-500x500.jpeg", brand: "UPL", category: "Vegetable Seeds", rating: 4 },
+    { id: 19, name: "Tomato Seeds", price: 80, image: "https://www.urbanplant.in/cdn/shop/files/Tomatocopy.webp?v=1686578634", brand: "Godrej Agrovet", category: "Seeds", rating: 3 },
+    { id: 20, name: "Carrot Seeds", price: 55, image: "https://www.urbanplant.in/cdn/shop/files/DesiCarrotcopy.webp?v=1699354802", brand: "Rallis India", category: "Seeds", rating: 5 },
+    { id: 21, name: "Chilly Seeds", price: 40, image: "https://www.agriplexindia.com/cdn/shop/files/Armour-F1-Hybrid-Chilli-Seeds.png?crop=center&height=645&v=1689157799&width=645", brand: "BASF India", category: "Seeds", rating: 4 },
+    { id: 22, name: "Beet Root Seeds", price: 65, image: "https://www.urbanplant.in/cdn/shop/products/Beetrootcopy.webp?v=1676979238", brand: "Bharat Rasayan", category: "Seeds", rating: 5 },
+    // Insecticides, Herbicides, Fungicides, Fertilizers
+    { id: 23, name: "Insecticide X", price: 180, image: "https://agribegri.com/productimage/5757233071727763458.webp", brand: "IFFCO", category: "Insecticides", rating: 4 },
+    { id: 24, name: "Herbicide Z", price: 200, image: "https://cdn11.bigcommerce.com/s-q5kvnwnjhv/images/stencil/390x390/products/4168/5506/Gauntlet_10L_PACKSHOT__24792.1662338575.jpg?c=1", brand: "UPL", category: "Herbicides", rating: 5 },
+    { id: 25, name: "Fungicide Y", price: 220, image: "https://image.made-in-china.com/226f3j00ScGiMrKnEqka/Cymoxanil-30-Famoxadone-22-5-52-5-Wdg-Hot-Selling-Chemicals-Granular-Fungicide.webp", brand: "Godrej Agrovet", category: "Fungicides", rating: 4 },
+    { id: 26, name: "Liquid Fertilizer A", price: 250, image: "https://organicbazar.net/cdn/shop/products/Bio-NPK-Fertilizer-Liquid-for-Organic-Gardening.jpg?v=1694169192", brand: "Rallis India", category: "Fertilizers", rating: 5 },
+    { id: 27, name: "Organic Fertilizer B", price: 230, image: "https://m.media-amazon.com/images/I/71cFg0MHVgL._AC_UF1000,1000_QL80_.jpg", brand: "BASF India", category: "Fertilizers", rating: 4 },
+    { id: 28, name: "Granular Fertilizer C", price: 260, image: "https://media.takealot.com/covers_images/34feeea8b9fb4f649b574c4422a77353/s-pdpxl.file", brand: "Bharat Rasayan", category: "Fertilizers", rating: 4 },
+    // Gardening Tools, Power Tools, Hand Tools
+    { id: 29, name: "Garden Spade", price: 150, image: "https://elixirgardensupplies.co.uk/wp-content/uploads/2023/10/Spade-Forks-Multi-Main-Amz-600x600.jpg", brand: "UPL", category: "Tools", rating: 5 },
+    { id: 30, name: "Pruning Shears", price: 120, image: "https://sharpex.com/pub/media/catalog/product/cache/6216a51f46f73aacc4ebc76ecf8803e9/f/e/feature_6_2.jpg", brand: "Godrej Agrovet", category: "Tools", rating: 4 },
+    { id: 31, name: "Lawn Mower", price: 350, image: "https://sharpex.com/pub/media/catalog/product/cache/6216a51f46f73aacc4ebc76ecf8803e9/i/m/img_8145_copy.jpg", brand: "Rallis India", category: "Tools", rating: 5 },
+    { id: 32, name: "Electric Hedge Trimmer", price: 300, image: "https://m.media-amazon.com/images/I/71RDecheCXS._AC_UF350,350_QL80_.jpg", brand: "IFFCO", category: "Tools", rating: 4 },
+    { id: 33, name: "Cordless Drill", price: 250, image: "https://m.media-amazon.com/images/I/81Sf1J2MT-L.jpg", brand: "UPL", category: "Tools", rating: 5 },
+    { id: 34, name: "Hammer", price: 100, image: "https://m.media-amazon.com/images/I/510jhr6HzWL.jpg", brand: "BASF India", category: "Tools", rating: 4 },
+    { id: 35, name: "Screwdriver Set", price: 80, image: "https://m.media-amazon.com/images/I/81+jq46RN9L.jpg", brand: "Bharat Rasayan", category: "Tools", rating: 5 },
+    { id: 36, name: "Wrench Set", price: 120, image: "https://operatools.in/wp-content/uploads/2023/03/IMG_20221203_142153_872.jpg", brand: "Godrej Agrovet", category: "Tools", rating: 4 },
+    { id: 38, name: "Garden Trowel", price: 90, image: "https://images-cdn.ubuy.co.in/64ce41dec1a63023aa6a1355-hand-shovel-for-gardening-trowel-garden.jpg", brand: "Rallis India", category: "Tools", rating: 4 },
+    { id: 39, name: "urea fertilizer", price: 90, image: "https://m.media-amazon.com/images/I/7128dLFR-iL.jpg", brand: "Rallis India", category: "Tools", rating: 4 },
+    { id: 40, name: "potash fertilizer", price: 90, image: "https://indiangardens.in/cdn/shop/files/www.indiangardens.in9962990209_4_58d88d51-05dd-4449-be5f-3deec8543aa0.jpg?v=1696229668", brand: "Rallis India", category: "Tools", rating: 4 },
+    { id: 41, name: "dap fertilizer", price: 90, image: "https://m.media-amazon.com/images/I/71lhggzlQqL.jpg", brand: "Rallis India", category: "Tools", rating: 4 },
+    { id: 42, name: "white potash fertilizer", price: 90, image: "https://5.imimg.com/data5/SELLER/Default/2023/5/306579701/NK/KE/PL/2389997/exsol-white-potash-0-0-50.jpeg", brand: "Rallis India", category: "Tools", rating: 4 },
+         { id: 43, name: "n p k ", price: 90, image: "https://media.licdn.com/dms/image/v2/D4D22AQGZO8qw6PcCPQ/feedshare-shrink_800/feedshare-shrink_800/0/1687407805745?e=2147483647&v=beta&t=3blwlI1UKY90b-52l7uDJxNGTugklpCSKbvLKronads", brand: "Rallis India", category: "Tools", rating: 4 },
+    { id: 1, name: "Coragen", price: 600, image: "https://kisankavikas.com/wp-content/uploads/2024/07/Coragen_1-scaled.webp", brand: "Godrej Agrovet", category: "Fertilizers", rating: 4 },
+    { id: 2, name: "Carrot Seeds", price: 250, image: "https://indianjadibooti.com/Jadistore/image/catalog/IJB-Final-Phot%20os-1000-1000/Edible-Carrot-Seeds.jpg", brand: "Rallis India", category: "Seeds", rating: 5 },
+    { id: 3, name: "Liquid Fertilizer", price: 300, image: "https://plantic.in/pimg/plantic-all-in-one/plantic-all-in-one2.jpg", brand: "IFFCO", category: "Tools", rating: 3 },
+    { id: 4, name: "Pesticide X", price: 150, image: "https://agribegri.com/productimage/1814008771712135329.webp", brand: "BASF India", category: "Pesticides", rating: 4 },
+    { id: 5, name: "Organic Fertilizer", price: 180, image: "https://5.imimg.com/data5/SELLER/Default/2023/3/294725080/AX/HJ/VV/3747077/bharat-custom-fungicides-1000x1000.jpg", brand: "Bharat Rasayan", category: "Fertilizers", rating: 5 },
+    { id: 6, name: "Garden Tools Set", price: 450, image: "https://m.media-amazon.com/images/I/71bDTXVtaiL.jpg", brand: "UPL", category: "Tools", rating: 4 },
+    { id: 7, name: "Tomato Seeds", price: 80, image: "https://cultree.in/cdn/shop/files/Aahan12_1.jpg?v=1699950014", brand: "BASF India", category: "Seeds", rating: 3 },
+    { id: 8, name: "Herbicide Y", price: 200, image: "https://www.imageforweeds.com/-/media/Project/OneWeb/ImageForWeeds/Images/products/2021/KillsNutsedgeRTS_32oz.png", brand: "Godrej Agrovet", category: "Pesticides", rating: 4 },
+    { id: 9, name: "Soil Conditioner", price: 300, image: "https://www.rallis.com/Upload/Images/thumbnail/Geogreen-plus-thumb.png", brand: "Rallis India", category: "Fertilizers", rating: 4 },
+    { id: 10, name: "Garden Sprayer", price: 350, image: "https://m.media-amazon.com/images/I/71J41DOhI3L._AC_UF1000,1000_QL80_.jpg", brand: "IFFCO", category: "Tools", rating: 5 },
+    { id: 11, name: "Seed Starter Kit", price: 120, image: "https://m.media-amazon.com/images/I/81ga-iwaCcL._AC_UF894,1000_QL80_.jpg", brand: "BASF India", category: "Seeds", rating: 4 },
+    { id: 12, name: "Plant Growth Enhancer", price: 250, image: "https://ecocrest.in/cdn/shop/files/Edited_Ecoagra_website_graphic_1_1200x1200.png?v=1726046848", brand: "Bharat Rasayan", category: "Fertilizers", rating: 5 },
+    { id: 13, name: "Hydroponic Kit", price: 600, image: "https://m.media-amazon.com/images/I/71EkOUQxMhL.jpg", brand: "UPL", category: "Tools", rating: 5 },
+    { id: 14, name: "Compost Manure", price: 200, image: "https://shehrikisaan.com/wp-content/uploads/2023/05/Bio-Manure-1100-x-1100-px-with-shadow-and-white-background.jpg", brand: "Godrej Agrovet", category: "Fertilizers", rating: 4 },
+    { id: 15, name: "Greenhouse Net", price: 550, image: "https://image.made-in-china.com/2f0j00ImnhaksPlKgB/HDPE-Plastic-Green-Flat-Tape-Net-Agricultural-Shade-Net-for-Greenhouse.webp", brand: "Rallis India", category: "Tools", rating: 4 },
+    // Additional Vegetable Seeds
+    { id: 16, name: "Bottle Gourd Seeds", price: 60, image: "https://www.urbanplant.in/cdn/shop/files/BottleGourdLongcopy.webp?v=1686578622", brand: "BASF India", category: "Seeds", rating: 4 },
+    { id: 17, name: "Cucumber Seeds", price: 70, image: "https://www.agriplexindia.com/cdn/shop/files/Syngenta-Glossy-Cucumber-Seeds.png?crop=center&height=500&v=1689311328&width=600", brand: "Bharat Rasayan", category: "Seeds", rating: 5 },
+    { id: 18, name: "Brinjal Seeds", price: 90, image: "https://5.imimg.com/data5/ECOM/Default/2023/9/348680579/VT/BN/MX/11500074/1696013430607-ppl086-500x500.jpeg", brand: "UPL", category: "Vegetable Seeds", rating: 4 },
+    { id: 19, name: "Tomato Seeds", price: 80, image: "https://www.urbanplant.in/cdn/shop/files/Tomatocopy.webp?v=1686578634", brand: "Godrej Agrovet", category: "Seeds", rating: 3 },
+    { id: 20, name: "Carrot Seeds", price: 55, image: "https://www.urbanplant.in/cdn/shop/files/DesiCarrotcopy.webp?v=1699354802", brand: "Rallis India", category: "Seeds", rating: 5 },
+    { id: 21, name: "Chilly Seeds", price: 40, image: "https://www.agriplexindia.com/cdn/shop/files/Armour-F1-Hybrid-Chilli-Seeds.png?crop=center&height=645&v=1689157799&width=645", brand: "BASF India", category: "Seeds", rating: 4 },
+    { id: 22, name: "Beet Root Seeds", price: 65, image: "https://www.urbanplant.in/cdn/shop/products/Beetrootcopy.webp?v=1676979238", brand: "Bharat Rasayan", category: "Seeds", rating: 5 },
+    // Insecticides, Herbicides, Fungicides, Fertilizers
+    { id: 23, name: "Insecticide X", price: 180, image: "https://agribegri.com/productimage/5757233071727763458.webp", brand: "IFFCO", category: "Insecticides", rating: 4 },
+    { id: 24, name: "Herbicide Z", price: 200, image: "https://cdn11.bigcommerce.com/s-q5kvnwnjhv/images/stencil/390x390/products/4168/5506/Gauntlet_10L_PACKSHOT__24792.1662338575.jpg?c=1", brand: "UPL", category: "Herbicides", rating: 5 },
+    { id: 25, name: "Fungicide Y", price: 220, image: "https://image.made-in-china.com/226f3j00ScGiMrKnEqka/Cymoxanil-30-Famoxadone-22-5-52-5-Wdg-Hot-Selling-Chemicals-Granular-Fungicide.webp", brand: "Godrej Agrovet", category: "Fungicides", rating: 4 },
+    { id: 26, name: "Liquid Fertilizer A", price: 250, image: "https://organicbazar.net/cdn/shop/products/Bio-NPK-Fertilizer-Liquid-for-Organic-Gardening.jpg?v=1694169192", brand: "Rallis India", category: "Fertilizers", rating: 5 },
+    { id: 27, name: "Organic Fertilizer B", price: 230, image: "https://m.media-amazon.com/images/I/71cFg0MHVgL._AC_UF1000,1000_QL80_.jpg", brand: "BASF India", category: "Fertilizers", rating: 4 },
+    { id: 28, name: "Granular Fertilizer C", price: 260, image: "https://media.takealot.com/covers_images/34feeea8b9fb4f649b574c4422a77353/s-pdpxl.file", brand: "Bharat Rasayan", category: "Fertilizers", rating: 4 },
+    // Gardening Tools, Power Tools, Hand Tools
+    { id: 29, name: "Garden Spade", price: 150, image: "https://elixirgardensupplies.co.uk/wp-content/uploads/2023/10/Spade-Forks-Multi-Main-Amz-600x600.jpg", brand: "UPL", category: "Tools", rating: 5 },
+    { id: 30, name: "Pruning Shears", price: 120, image: "https://sharpex.com/pub/media/catalog/product/cache/6216a51f46f73aacc4ebc76ecf8803e9/f/e/feature_6_2.jpg", brand: "Godrej Agrovet", category: "Tools", rating: 4 },
+    { id: 31, name: "Lawn Mower", price: 350, image: "https://sharpex.com/pub/media/catalog/product/cache/6216a51f46f73aacc4ebc76ecf8803e9/i/m/img_8145_copy.jpg", brand: "Rallis India", category: "Tools", rating: 5 },
+    { id: 32, name: "Electric Hedge Trimmer", price: 300, image: "https://m.media-amazon.com/images/I/71RDecheCXS._AC_UF350,350_QL80_.jpg", brand: "IFFCO", category: "Tools", rating: 4 },
+    { id: 33, name: "Cordless Drill", price: 250, image: "https://m.media-amazon.com/images/I/81Sf1J2MT-L.jpg", brand: "UPL", category: "Tools", rating: 5 },
+    { id: 34, name: "Hammer", price: 100, image: "https://m.media-amazon.com/images/I/510jhr6HzWL.jpg", brand: "BASF India", category: "Tools", rating: 4 },
+    { id: 35, name: "Screwdriver Set", price: 80, image: "https://m.media-amazon.com/images/I/81+jq46RN9L.jpg", brand: "Bharat Rasayan", category: "Tools", rating: 5 },
+    { id: 36, name: "Wrench Set", price: 120, image: "https://operatools.in/wp-content/uploads/2023/03/IMG_20221203_142153_872.jpg", brand: "Godrej Agrovet", category: "Tools", rating: 4 },
+    { id: 38, name: "Garden Trowel", price: 90, image: "https://images-cdn.ubuy.co.in/64ce41dec1a63023aa6a1355-hand-shovel-for-gardening-trowel-garden.jpg", brand: "Rallis India", category: "Tools", rating: 4 },
+    { id: 39, name: "urea fertilizer", price: 90, image: "https://m.media-amazon.com/images/I/7128dLFR-iL.jpg", brand: "Rallis India", category: "Tools", rating: 4 },
+    { id: 40, name: "potash fertilizer", price: 90, image: "https://indiangardens.in/cdn/shop/files/www.indiangardens.in9962990209_4_58d88d51-05dd-4449-be5f-3deec8543aa0.jpg?v=1696229668", brand: "Rallis India", category: "Tools", rating: 4 },
+    { id: 41, name: "dap fertilizer", price: 90, image: "https://m.media-amazon.com/images/I/71lhggzlQqL.jpg", brand: "Rallis India", category: "Tools", rating: 4 },
+    { id: 42, name: "white potash fertilizer", price: 90, image: "https://5.imimg.com/data5/SELLER/Default/2023/5/306579701/NK/KE/PL/2389997/exsol-white-potash-0-0-50.jpeg", brand: "Rallis India", category: "Tools", rating: 4 },
+    { id: 1, name: "Coragen", price: 600, image: "https://kisankavikas.com/wp-content/uploads/2024/07/Coragen_1-scaled.webp", brand: "Godrej Agrovet", category: "Fertilizers", rating: 4 },
+    { id: 2, name: "Carrot Seeds", price: 250, image: "https://indianjadibooti.com/Jadistore/image/catalog/IJB-Final-Phot%20os-1000-1000/Edible-Carrot-Seeds.jpg", brand: "Rallis India", category: "Seeds", rating: 5 },
+    { id: 3, name: "Liquid Fertilizer", price: 300, image: "https://plantic.in/pimg/plantic-all-in-one/plantic-all-in-one2.jpg", brand: "IFFCO", category: "Tools", rating: 3 },
+    { id: 4, name: "Pesticide X", price: 150, image: "https://agribegri.com/productimage/1814008771712135329.webp", brand: "BASF India", category: "Pesticides", rating: 4 },
+    { id: 5, name: "Organic Fertilizer", price: 180, image: "https://5.imimg.com/data5/SELLER/Default/2023/3/294725080/AX/HJ/VV/3747077/bharat-custom-fungicides-1000x1000.jpg", brand: "Bharat Rasayan", category: "Fertilizers", rating: 5 },
+    { id: 6, name: "Garden Tools Set", price: 450, image: "https://m.media-amazon.com/images/I/71bDTXVtaiL.jpg", brand: "UPL", category: "Tools", rating: 4 },
+    { id: 7, name: "Tomato Seeds", price: 80, image: "https://cultree.in/cdn/shop/files/Aahan12_1.jpg?v=1699950014", brand: "BASF India", category: "Seeds", rating: 3 },
+    { id: 8, name: "Herbicide Y", price: 200, image: "https://www.imageforweeds.com/-/media/Project/OneWeb/ImageForWeeds/Images/products/2021/KillsNutsedgeRTS_32oz.png", brand: "Godrej Agrovet", category: "Pesticides", rating: 4 },
+    { id: 9, name: "Soil Conditioner", price: 300, image: "https://www.rallis.com/Upload/Images/thumbnail/Geogreen-plus-thumb.png", brand: "Rallis India", category: "Fertilizers", rating: 4 },
+    { id: 10, name: "Garden Sprayer", price: 350, image: "https://m.media-amazon.com/images/I/71J41DOhI3L._AC_UF1000,1000_QL80_.jpg", brand: "IFFCO", category: "Tools", rating: 5 },
+    { id: 11, name: "Seed Starter Kit", price: 120, image: "https://m.media-amazon.com/images/I/81ga-iwaCcL._AC_UF894,1000_QL80_.jpg", brand: "BASF India", category: "Seeds", rating: 4 },
+    { id: 12, name: "Plant Growth Enhancer", price: 250, image: "https://ecocrest.in/cdn/shop/files/Edited_Ecoagra_website_graphic_1_1200x1200.png?v=1726046848", brand: "Bharat Rasayan", category: "Fertilizers", rating: 5 },
+    { id: 13, name: "Hydroponic Kit", price: 600, image: "https://m.media-amazon.com/images/I/71EkOUQxMhL.jpg", brand: "UPL", category: "Tools", rating: 5 },
+    { id: 14, name: "Compost Manure", price: 200, image: "https://shehrikisaan.com/wp-content/uploads/2023/05/Bio-Manure-1100-x-1100-px-with-shadow-and-white-background.jpg", brand: "Godrej Agrovet", category: "Fertilizers", rating: 4 },
+    { id: 15, name: "Greenhouse Net", price: 550, image: "https://image.made-in-china.com/2f0j00ImnhaksPlKgB/HDPE-Plastic-Green-Flat-Tape-Net-Agricultural-Shade-Net-for-Greenhouse.webp", brand: "Rallis India", category: "Tools", rating: 4 },
+    // Additional Vegetable Seeds
+    { id: 16, name: "Bottle Gourd Seeds", price: 60, image: "https://www.urbanplant.in/cdn/shop/files/BottleGourdLongcopy.webp?v=1686578622", brand: "BASF India", category: "Seeds", rating: 4 },
+    { id: 17, name: "Cucumber Seeds", price: 70, image: "https://www.agriplexindia.com/cdn/shop/files/Syngenta-Glossy-Cucumber-Seeds.png?crop=center&height=500&v=1689311328&width=600", brand: "Bharat Rasayan", category: "Seeds", rating: 5 },
+    { id: 18, name: "Brinjal Seeds", price: 90, image: "https://5.imimg.com/data5/ECOM/Default/2023/9/348680579/VT/BN/MX/11500074/1696013430607-ppl086-500x500.jpeg", brand: "UPL", category: "Vegetable Seeds", rating: 4 },
+    { id: 19, name: "Tomato Seeds", price: 80, image: "https://www.urbanplant.in/cdn/shop/files/Tomatocopy.webp?v=1686578634", brand: "Godrej Agrovet", category: "Seeds", rating: 3 },
+    { id: 20, name: "Carrot Seeds", price: 55, image: "https://www.urbanplant.in/cdn/shop/files/DesiCarrotcopy.webp?v=1699354802", brand: "Rallis India", category: "Seeds", rating: 5 },
+    { id: 21, name: "Chilly Seeds", price: 40, image: "https://www.agriplexindia.com/cdn/shop/files/Armour-F1-Hybrid-Chilli-Seeds.png?crop=center&height=645&v=1689157799&width=645", brand: "BASF India", category: "Seeds", rating: 4 },
+    { id: 22, name: "Beet Root Seeds", price: 65, image: "https://www.urbanplant.in/cdn/shop/products/Beetrootcopy.webp?v=1676979238", brand: "Bharat Rasayan", category: "Seeds", rating: 5 },
+    // Insecticides, Herbicides, Fungicides, Fertilizers
+    { id: 23, name: "Insecticide X", price: 180, image: "https://agribegri.com/productimage/5757233071727763458.webp", brand: "IFFCO", category: "Insecticides", rating: 4 },
+    { id: 24, name: "Herbicide Z", price: 200, image: "https://cdn11.bigcommerce.com/s-q5kvnwnjhv/images/stencil/390x390/products/4168/5506/Gauntlet_10L_PACKSHOT__24792.1662338575.jpg?c=1", brand: "UPL", category: "Herbicides", rating: 5 },
+    { id: 25, name: "Fungicide Y", price: 220, image: "https://image.made-in-china.com/226f3j00ScGiMrKnEqka/Cymoxanil-30-Famoxadone-22-5-52-5-Wdg-Hot-Selling-Chemicals-Granular-Fungicide.webp", brand: "Godrej Agrovet", category: "Fungicides", rating: 4 },
+    { id: 26, name: "Liquid Fertilizer A", price: 250, image: "https://organicbazar.net/cdn/shop/products/Bio-NPK-Fertilizer-Liquid-for-Organic-Gardening.jpg?v=1694169192", brand: "Rallis India", category: "Fertilizers", rating: 5 },
+    { id: 27, name: "Organic Fertilizer B", price: 230, image: "https://m.media-amazon.com/images/I/71cFg0MHVgL._AC_UF1000,1000_QL80_.jpg", brand: "BASF India", category: "Fertilizers", rating: 4 },
+    { id: 28, name: "Granular Fertilizer C", price: 260, image: "https://media.takealot.com/covers_images/34feeea8b9fb4f649b574c4422a77353/s-pdpxl.file", brand: "Bharat Rasayan", category: "Fertilizers", rating: 4 },
+
+    // Gardening Tools, Power Tools, Hand Tools
+    { id: 29, name: "Garden Spade", price: 150, image: "https://elixirgardensupplies.co.uk/wp-content/uploads/2023/10/Spade-Forks-Multi-Main-Amz-600x600.jpg", brand: "UPL", category: "Tools", rating: 5 },
+    { id: 30, name: "Pruning Shears", price: 120, image: "https://sharpex.com/pub/media/catalog/product/cache/6216a51f46f73aacc4ebc76ecf8803e9/f/e/feature_6_2.jpg", brand: "Godrej Agrovet", category: "Tools", rating: 4 },
+    { id: 31, name: "Lawn Mower", price: 350, image: "https://sharpex.com/pub/media/catalog/product/cache/6216a51f46f73aacc4ebc76ecf8803e9/i/m/img_8145_copy.jpg", brand: "Rallis India", category: "Tools", rating: 5 },
+    { id: 32, name: "Electric Hedge Trimmer", price: 300, image: "https://m.media-amazon.com/images/I/71RDecheCXS._AC_UF350,350_QL80_.jpg", brand: "IFFCO", category: "Tools", rating: 4 },
+    { id: 33, name: "Cordless Drill", price: 250, image: "https://m.media-amazon.com/images/I/81Sf1J2MT-L.jpg", brand: "UPL", category: "Tools", rating: 5 },
+    { id: 34, name: "Hammer", price: 100, image: "https://m.media-amazon.com/images/I/510jhr6HzWL.jpg", brand: "BASF India", category: "Tools", rating: 4 },
+    { id: 35, name: "Screwdriver Set", price: 80, image: "https://m.media-amazon.com/images/I/81+jq46RN9L.jpg", brand: "Bharat Rasayan", category: "Tools", rating: 5 },
+    { id: 36, name: "Wrench Set", price: 120, image: "https://operatools.in/wp-content/uploads/2023/03/IMG_20221203_142153_872.jpg", brand: "Godrej Agrovet", category: "Tools", rating: 4 },
+    { id: 38, name: "Garden Trowel", price: 90, image: "https://images-cdn.ubuy.co.in/64ce41dec1a63023aa6a1355-hand-shovel-for-gardening-trowel-garden.jpg", brand: "Rallis India", category: "Tools", rating: 4 },
+    { id: 39, name: "urea fertilizer", price: 90, image: "https://m.media-amazon.com/images/I/7128dLFR-iL.jpg", brand: "Rallis India", category: "Tools", rating: 4 },
+    { id: 40, name: "potash fertilizer", price: 90, image: "https://indiangardens.in/cdn/shop/files/www.indiangardens.in9962990209_4_58d88d51-05dd-4449-be5f-3deec8543aa0.jpg?v=1696229668", brand: "Rallis India", category: "Tools", rating: 4 },
+    { id: 41, name: "dap fertilizer", price: 90, image: "https://m.media-amazon.com/images/I/71lhggzlQqL.jpg", brand: "Rallis India", category: "Tools", rating: 4 },
+    { id: 42, name: "white potash fertilizer", price: 90, image: "https://5.imimg.com/data5/SELLER/Default/2023/5/306579701/NK/KE/PL/2389997/exsol-white-potash-0-0-50.jpeg", brand: "Rallis India", category: "Tools", rating: 4 },
+         { id: 43, name: "n p k ", price: 90, image: "https://media.licdn.com/dms/image/v2/D4D22AQGZO8qw6PcCPQ/feedshare-shrink_800/feedshare-shrink_800/0/1687407805745?e=2147483647&v=beta&t=3blwlI1UKY90b-52l7uDJxNGTugklpCSKbvLKronads", brand: "Rallis India", category: "Tools", rating: 4 },
+    { id: 1, name: "Coragen", price: 600, image: "https://kisankavikas.com/wp-content/uploads/2024/07/Coragen_1-scaled.webp", brand: "Godrej Agrovet", category: "Fertilizers", rating: 4 },
+    { id: 2, name: "Carrot Seeds", price: 250, image: "https://indianjadibooti.com/Jadistore/image/catalog/IJB-Final-Phot%20os-1000-1000/Edible-Carrot-Seeds.jpg", brand: "Rallis India", category: "Seeds", rating: 5 },
+    { id: 3, name: "Liquid Fertilizer", price: 300, image: "https://plantic.in/pimg/plantic-all-in-one/plantic-all-in-one2.jpg", brand: "IFFCO", category: "Tools", rating: 3 },
+    { id: 4, name: "Pesticide X", price: 150, image: "https://agribegri.com/productimage/1814008771712135329.webp", brand: "BASF India", category: "Pesticides", rating: 4 },
+    { id: 5, name: "Organic Fertilizer", price: 180, image: "https://5.imimg.com/data5/SELLER/Default/2023/3/294725080/AX/HJ/VV/3747077/bharat-custom-fungicides-1000x1000.jpg", brand: "Bharat Rasayan", category: "Fertilizers", rating: 5 },
+    { id: 6, name: "Garden Tools Set", price: 450, image: "https://m.media-amazon.com/images/I/71bDTXVtaiL.jpg", brand: "UPL", category: "Tools", rating: 4 },
+    { id: 7, name: "Tomato Seeds", price: 80, image: "https://cultree.in/cdn/shop/files/Aahan12_1.jpg?v=1699950014", brand: "BASF India", category: "Seeds", rating: 3 },
+    { id: 8, name: "Herbicide Y", price: 200, image: "https://www.imageforweeds.com/-/media/Project/OneWeb/ImageForWeeds/Images/products/2021/KillsNutsedgeRTS_32oz.png", brand: "Godrej Agrovet", category: "Pesticides", rating: 4 },
+    { id: 9, name: "Soil Conditioner", price: 300, image: "https://www.rallis.com/Upload/Images/thumbnail/Geogreen-plus-thumb.png", brand: "Rallis India", category: "Fertilizers", rating: 4 },
+    { id: 10, name: "Garden Sprayer", price: 350, image: "https://m.media-amazon.com/images/I/71J41DOhI3L._AC_UF1000,1000_QL80_.jpg", brand: "IFFCO", category: "Tools", rating: 5 },
+    { id: 11, name: "Seed Starter Kit", price: 120, image: "https://m.media-amazon.com/images/I/81ga-iwaCcL._AC_UF894,1000_QL80_.jpg", brand: "BASF India", category: "Seeds", rating: 4 },
+    { id: 12, name: "Plant Growth Enhancer", price: 250, image: "https://ecocrest.in/cdn/shop/files/Edited_Ecoagra_website_graphic_1_1200x1200.png?v=1726046848", brand: "Bharat Rasayan", category: "Fertilizers", rating: 5 },
+    { id: 13, name: "Hydroponic Kit", price: 600, image: "https://m.media-amazon.com/images/I/71EkOUQxMhL.jpg", brand: "UPL", category: "Tools", rating: 5 },
+    { id: 14, name: "Compost Manure", price: 200, image: "https://shehrikisaan.com/wp-content/uploads/2023/05/Bio-Manure-1100-x-1100-px-with-shadow-and-white-background.jpg", brand: "Godrej Agrovet", category: "Fertilizers", rating: 4 },
+    { id: 15, name: "Greenhouse Net", price: 550, image: "https://image.made-in-china.com/2f0j00ImnhaksPlKgB/HDPE-Plastic-Green-Flat-Tape-Net-Agricultural-Shade-Net-for-Greenhouse.webp", brand: "Rallis India", category: "Tools", rating: 4 },
+    // Additional Vegetable Seeds
+    { id: 16, name: "Bottle Gourd Seeds", price: 60, image: "https://www.urbanplant.in/cdn/shop/files/BottleGourdLongcopy.webp?v=1686578622", brand: "BASF India", category: "Seeds", rating: 4 },
+    { id: 17, name: "Cucumber Seeds", price: 70, image: "https://www.agriplexindia.com/cdn/shop/files/Syngenta-Glossy-Cucumber-Seeds.png?crop=center&height=500&v=1689311328&width=600", brand: "Bharat Rasayan", category: "Seeds", rating: 5 },
+    { id: 18, name: "Brinjal Seeds", price: 90, image: "https://5.imimg.com/data5/ECOM/Default/2023/9/348680579/VT/BN/MX/11500074/1696013430607-ppl086-500x500.jpeg", brand: "UPL", category: "Vegetable Seeds", rating: 4 },
+    { id: 19, name: "Tomato Seeds", price: 80, image: "https://www.urbanplant.in/cdn/shop/files/Tomatocopy.webp?v=1686578634", brand: "Godrej Agrovet", category: "Seeds", rating: 3 },
+    { id: 20, name: "Carrot Seeds", price: 55, image: "https://www.urbanplant.in/cdn/shop/files/DesiCarrotcopy.webp?v=1699354802", brand: "Rallis India", category: "Seeds", rating: 5 },
+    { id: 21, name: "Chilly Seeds", price: 40, image: "https://www.agriplexindia.com/cdn/shop/files/Armour-F1-Hybrid-Chilli-Seeds.png?crop=center&height=645&v=1689157799&width=645", brand: "BASF India", category: "Seeds", rating: 4 },
+    { id: 22, name: "Beet Root Seeds", price: 65, image: "https://www.urbanplant.in/cdn/shop/products/Beetrootcopy.webp?v=1676979238", brand: "Bharat Rasayan", category: "Seeds", rating: 5 },
+    // Insecticides, Herbicides, Fungicides, Fertilizers
+    { id: 23, name: "Insecticide X", price: 180, image: "https://agribegri.com/productimage/5757233071727763458.webp", brand: "IFFCO", category: "Insecticides", rating: 4 },
+    { id: 24, name: "Herbicide Z", price: 200, image: "https://cdn11.bigcommerce.com/s-q5kvnwnjhv/images/stencil/390x390/products/4168/5506/Gauntlet_10L_PACKSHOT__24792.1662338575.jpg?c=1", brand: "UPL", category: "Herbicides", rating: 5 },
+    { id: 25, name: "Fungicide Y", price: 220, image: "https://image.made-in-china.com/226f3j00ScGiMrKnEqka/Cymoxanil-30-Famoxadone-22-5-52-5-Wdg-Hot-Selling-Chemicals-Granular-Fungicide.webp", brand: "Godrej Agrovet", category: "Fungicides", rating: 4 },
+    { id: 26, name: "Liquid Fertilizer A", price: 250, image: "https://organicbazar.net/cdn/shop/products/Bio-NPK-Fertilizer-Liquid-for-Organic-Gardening.jpg?v=1694169192", brand: "Rallis India", category: "Fertilizers", rating: 5 },
+    { id: 27, name: "Organic Fertilizer B", price: 230, image: "https://m.media-amazon.com/images/I/71cFg0MHVgL._AC_UF1000,1000_QL80_.jpg", brand: "BASF India", category: "Fertilizers", rating: 4 },
+    { id: 28, name: "Granular Fertilizer C", price: 260, image: "https://media.takealot.com/covers_images/34feeea8b9fb4f649b574c4422a77353/s-pdpxl.file", brand: "Bharat Rasayan", category: "Fertilizers", rating: 4 },
+    // Gardening Tools, Power Tools, Hand Tools
+    { id: 29, name: "Garden Spade", price: 150, image: "https://elixirgardensupplies.co.uk/wp-content/uploads/2023/10/Spade-Forks-Multi-Main-Amz-600x600.jpg", brand: "UPL", category: "Tools", rating: 5 },
+    { id: 30, name: "Pruning Shears", price: 120, image: "https://sharpex.com/pub/media/catalog/product/cache/6216a51f46f73aacc4ebc76ecf8803e9/f/e/feature_6_2.jpg", brand: "Godrej Agrovet", category: "Tools", rating: 4 },
+    { id: 31, name: "Lawn Mower", price: 350, image: "https://sharpex.com/pub/media/catalog/product/cache/6216a51f46f73aacc4ebc76ecf8803e9/i/m/img_8145_copy.jpg", brand: "Rallis India", category: "Tools", rating: 5 },
+    { id: 32, name: "Electric Hedge Trimmer", price: 300, image: "https://m.media-amazon.com/images/I/71RDecheCXS._AC_UF350,350_QL80_.jpg", brand: "IFFCO", category: "Tools", rating: 4 },
+    { id: 33, name: "Cordless Drill", price: 250, image: "https://m.media-amazon.com/images/I/81Sf1J2MT-L.jpg", brand: "UPL", category: "Tools", rating: 5 },
+    { id: 34, name: "Hammer", price: 100, image: "https://m.media-amazon.com/images/I/510jhr6HzWL.jpg", brand: "BASF India", category: "Tools", rating: 4 },
+    { id: 35, name: "Screwdriver Set", price: 80, image: "https://m.media-amazon.com/images/I/81+jq46RN9L.jpg", brand: "Bharat Rasayan", category: "Tools", rating: 5 },
+    { id: 36, name: "Wrench Set", price: 120, image: "https://operatools.in/wp-content/uploads/2023/03/IMG_20221203_142153_872.jpg", brand: "Godrej Agrovet", category: "Tools", rating: 4 },
+    { id: 38, name: "Garden Trowel", price: 90, image: "https://images-cdn.ubuy.co.in/64ce41dec1a63023aa6a1355-hand-shovel-for-gardening-trowel-garden.jpg", brand: "Rallis India", category: "Tools", rating: 4 },
+    { id: 39, name: "urea fertilizer", price: 90, image: "https://m.media-amazon.com/images/I/7128dLFR-iL.jpg", brand: "Rallis India", category: "Tools", rating: 4 },
+    { id: 40, name: "potash fertilizer", price: 90, image: "https://indiangardens.in/cdn/shop/files/www.indiangardens.in9962990209_4_58d88d51-05dd-4449-be5f-3deec8543aa0.jpg?v=1696229668", brand: "Rallis India", category: "Tools", rating: 4 },
+    { id: 41, name: "dap fertilizer", price: 90, image: "https://m.media-amazon.com/images/I/71lhggzlQqL.jpg", brand: "Rallis India", category: "Tools", rating: 4 },
+    { id: 42, name: "white potash fertilizer", price: 90, image: "https://5.imimg.com/data5/SELLER/Default/2023/5/306579701/NK/KE/PL/2389997/exsol-white-potash-0-0-50.jpeg", brand: "Rallis India", category: "Tools", rating: 4 }
+
+];
+
+
+
+
+
+        // Load cart from localStorage or initialize as empty
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        // Function to dynamically render products on the page
+        function renderProducts(productsToRender) {
+            const productGrid = document.getElementById("productGrid");
+            productGrid.innerHTML = "";
+
+            productsToRender.forEach(product => {
+                const productCard = document.createElement("div");
+                productCard.classList.add("product-card");
+
+                const img = document.createElement("img");
+                img.src = product.image;
+                img.alt = product.name;
+
+                const title = document.createElement("h2");
+                title.textContent = product.name;
+
+                const price = document.createElement("p");
+                price.textContent = `₹${updatePrice(product)}`;
+
+                const brand = document.createElement("p");
+                brand.textContent = `Brand: ${product.brand}`;
+
+                const category = document.createElement("p");
+                category.textContent = `Category: ${product.category}`;
+
+                const rating = document.createElement("p");
+                rating.textContent = `Rating: ${"⭐".repeat(product.rating)}`;
+
+                const addToCartBtn = document.createElement("button");
+                addToCartBtn.classList.add("add-to-cart");
+                addToCartBtn.textContent = "Add to Cart";
+                addToCartBtn.onclick = () => addToCart(product);
+
+                productCard.append(img, title, price, brand, category, rating, addToCartBtn);
+                productGrid.appendChild(productCard);
+            });
+        }
+
+        // Filter products based on selected brand and category
+        function filterProducts() {
+            const brand = document.getElementById("brandFilter").value;
+            const category = document.getElementById("categoryFilter").value;
+
+            const filteredProducts = products.filter(product => {
+                return (!brand || product.brand === brand) && (!category || product.category === category);
+            });
+
+            renderProducts(filteredProducts);
+        }
+
+        // Sort products by selected criteria
+        function sortProducts() {
+            const sortOption = document.getElementById("sortFilter").value;
+
+            let sortedProducts = [...products];
+            if (sortOption === "price_asc") {
+                sortedProducts.sort((a, b) => a.price - b.price);
+            } else if (sortOption === "price_desc") {
+                sortedProducts.sort((a, b) => b.price - a.price);
+            } else if (sortOption === "name") {
+                sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
+            }
+
+            renderProducts(sortedProducts);
+        }
+
+        // Search products by name
+        function searchProducts() {
+            const searchQuery = document.getElementById("searchBox").value.toLowerCase();
+            const searchedProducts = products.filter(product =>
+                product.name.toLowerCase().includes(searchQuery)
+            );
+            renderProducts(searchedProducts);
+        }
+
+        // Add item to the cart
+        function addToCart(product) {
+            const existingProduct = cart.find(item => item.id === product.id);
+            if (existingProduct) {
+                existingProduct.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+
+            localStorage.setItem("cart", JSON.stringify(cart));
+            alert("Your item has been added to the cart successfully!");
+            updateCartDetails();
+        }
+
+        // Update cart details
+        function updateCartDetails() {
+            const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+            const totalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+            console.log(`Total Items: ${totalItems}, Total Price: ₹${totalPrice}`);
+        }
+
+        // Initialize with all products
+        window.onload = () => renderProducts(products);
+    </script>
+
+<script>
+   let currentImage2 = 0; // Start with the first image
+   const heroSection2 = document.querySelector('.hero-2-section');
+   const heroHeading2 = document.getElementById('hero-2-heading');
+   const heroDescription2 = document.getElementById('hero-2-description');
+
+   const content2 = [
+       {
+           imageClass: 'hero-2-1',
+           heading: 'Experience the Best Agricultural Products',
+           description: 'Quality and sustainability for every farm.'
+       },
+       {
+           imageClass: 'hero-2-2',
+           heading: 'Innovate Your Farm Today',
+           description: 'Tools and resources for modern agriculture.'
+       },
+       {
+           imageClass: 'hero-2-3',
+           heading: 'Sow the Seeds of Success',
+           description: 'Find the best seeds for your crops.'
+       },
+       {
+           imageClass: 'hero-2-4',
+           heading: 'Grow with Confidence',
+           description: 'Trusted products for all your farming needs.'
+       }
+   ];
+
+   function changeBackgroundAndText2() {
+       // Update the index to move to the next image
+       currentImage2 = (currentImage2 + 1) % content2.length;
+
+       // Remove current image class and add the next one
+       heroSection2.classList.remove('hero-2-1', 'hero-2-2', 'hero-2-3', 'hero-2-4');
+       heroSection2.classList.add(content2[currentImage2].imageClass);
+
+       // Update the heading and description based on the new content
+       heroHeading2.textContent = content2[currentImage2].heading;
+       heroDescription2.textContent = content2[currentImage2].description;
+   }
+
+   // Set interval to change image and content every 5 seconds
+   setInterval(changeBackgroundAndText2, 5000);
+
+   // Initialize the first background and content
+   changeBackgroundAndText2();
+</script>
+
+ <script>
+        // Function to simulate dynamic price update
+        function updatePrice(product) {
+            const dynamicPrice = product.price + Math.floor(Math.random() * 50); // Random price fluctuation
+            return dynamicPrice;
+        }
+
+        // Show or hide the "Go to Top" button based on scroll position
+        window.onscroll = function() { toggleGoTopButton() };
+
+        function toggleGoTopButton() {
+            const goTopButton = document.getElementById("goTopButton");
+            if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+                goTopButton.style.display = "block"; // Show the button
+            } else {
+                goTopButton.style.display = "none"; // Hide the button
+            }
+        }
+
+        // Smooth scroll to top function
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    </script>

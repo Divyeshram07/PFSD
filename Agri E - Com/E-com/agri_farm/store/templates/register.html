@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons/css/boxicons.min.css">
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background: #f3f4f6;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 24px;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 16px;
+            box-shadow: 0px 0px 30px 20px rgba(0, 0, 0, 0.1);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            margin-bottom: 16px;
+            font-size: 24px;
+            text-align: center;
+            color: #333;
+        }
+
+        .input-box {
+            display: flex;
+            width: 100%;
+            position: relative;
+            margin-top: 20px;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 10px 16px 10px 38px;
+            border-radius: 99px;
+            border: solid 3px #ddd;
+            background: #f9f9f9;
+            outline: none;
+            caret-color: #333;
+            color: #333;
+            font-weight: 500;
+            transition: 0.25s;
+        }
+
+        .input-box input:focus {
+            border: solid 3px #1b3d3c;
+        }
+
+        .input-box input::placeholder {
+            color: #aaa;
+        }
+
+        .input-box i {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 14px;
+            color: #aaa;
+            font-size: 18px;
+            transition: 0.25s;
+        }
+
+        .input-box input:focus + i {
+            color: #32CDD5;
+        }
+
+        .eye-icon-btn {
+            position: absolute;
+            top: 50%;
+            right: 16px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 20px;
+            color: #32CDD5;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            margin-top: 24px;
+            padding: 10px 0;
+            background: #1b3d3c;
+            border: none;
+            border-radius: 99px;
+            color: white;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            outline: transparent 3px solid;
+            transition: 0.1s;
+        }
+
+        button[type="submit"]:focus {
+            outline: #32CDD58A 3px solid;
+        }
+
+        .dont-have-an-account {
+            font-weight: normal;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        .signup-link a {
+            color: #264653;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        .message {
+            color: #e63946;
+            margin-top: 1rem;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* Responsive Styles */
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 16px;
+                max-width: 95%;
+            }
+
+            h2 {
+                font-size: 22px;
+            }
+
+            .input-box input {
+                font-size: 14px;
+            }
+
+            button[type="submit"] {
+                font-size: 14px;
+            }
+
+            .dont-have-an-account {
+                font-size: 14px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 12px;
+                max-width: 100%;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            .input-box input {
+                padding: 8px 12px 8px 30px;
+                font-size: 13px;
+            }
+
+            button[type="submit"] {
+                font-size: 13px;
+            }
+
+            .dont-have-an-account {
+                font-size: 13px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <form class="container" method="POST" action="{% url 'register' %}">
+        {% csrf_token %}
+        <h2>Register</h2>
+
+        <!-- Username -->
+        <section class="input-box">
+            <input type="text" name="username" placeholder="Username" required>
+            <i class='bx bxs-user'></i>
+        </section>
+
+        <!-- Password -->
+        <section class="input-box">
+            <input type="password" name="password" id="password" placeholder="Password" required>
+            <i class='bx bxs-lock-alt'></i>
+            <button type="button" id="togglePassword" class="eye-icon-btn">👁️</button>
+        </section>
+
+        <!-- Confirm Password -->
+        <section class="input-box">
+            <input type="password" name="confirm_password" id="confirm-password" placeholder="Confirm Password" required>
+            <i class='bx bxs-lock-alt'></i>
+            <button type="button" id="toggleConfirmPassword" class="eye-icon-btn">👁️</button>
+        </section>
+
+        <!-- Submit Button -->
+        <button type="submit">Register</button>
+
+        <!-- Error Messages -->
+        <p class="message">{% for message in messages %}{{ message }}{% endfor %}</p>
+
+        <!-- Login Link -->
+        <h5 class="dont-have-an-account">
+            Already have an account?
+            <a href="{% url 'login' %}"><b>Login</b></a>
+        </h5>
+    </form>
+
+    <script>
+        // Toggle password visibility for password field
+        const togglePasswordBtn = document.getElementById("togglePassword");
+        const passwordField = document.getElementById("password");
+
+        togglePasswordBtn.addEventListener("click", function () {
+            const type = passwordField.type === "password" ? "text" : "password";
+            passwordField.type = type;
+            togglePasswordBtn.textContent = passwordField.type === "password" ? "👁️" : "🙈";
+        });
+
+        // Toggle password visibility for confirm password field
+        const toggleConfirmPasswordBtn = document.getElementById("toggleConfirmPassword");
+        const confirmPasswordField = document.getElementById("confirm-password");
+
+        toggleConfirmPasswordBtn.addEventListener("click", function () {
+            const type = confirmPasswordField.type === "password" ? "text" : "password";
+            confirmPasswordField.type = type;
+            toggleConfirmPasswordBtn.textContent = confirmPasswordField.type === "password" ? "👁️" : "🙈";
+        });
+    </script>
+</body>
+</html>

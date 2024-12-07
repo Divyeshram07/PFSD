@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Successful</title>
+    <style>
+        /* Success page styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f9f9f9;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        h2 {
+            text-align: center;
+            color: #4CAF50;
+        }
+
+        p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Order Successfully!</h2>
+    <p><strong>Name:</strong> <span id="userName"></span></p>
+    <p><strong>Email:</strong> <span id="userEmail"></span></p>
+    <p><strong>Phone:</strong> <span id="userPhone"></span></p>
+    <p><strong>Address:</strong> <span id="userAddress"></span></p>
+    <p><strong>Order Total:</strong> ₹<span id="orderTotal"></span></p>
+    <h3>Products Ordered:</h3>
+    <ul id="productList">
+        <!-- Dynamically filled products will go here -->
+    </ul>
+</div>
+
+<script>
+// Order data from Django context
+let orderData = {
+    user: {
+        firstName: '{{ order.first_name }}',
+        lastName: '{{ order.last_name }}',
+        email: '{{ order.email }}',
+        phone: '{{ order.phone }}',
+        address: {
+            street: '{{ order.street_address }}',
+            city: '{{ order.city }}',
+            state: '{{ order.state }}',
+            postcode: '{{ order.postcode }}'
+        }
+    },
+    order: {
+        totalPrice: '{{ order.total_price }}',
+        cartItems: [
+            {% for item in order.orderitem_set.all %}
+            {
+                product: {
+                    name: '{{ item.product.name }}',
+                    price: '{{ item.product.price }}'
+                },
+                quantity: '{{ item.quantity }}'
+            },
+            {% endfor %}
+        ]
+    }
+};
+
+// Populate user details
+document.getElementById('userName').textContent = `${orderData.user.firstName} ${orderData.user.lastName}`;
+document.getElementById('userEmail').textContent = orderData.user.email;
+document.getElementById('userPhone').textContent = orderData.user.phone;
+document.getElementById('userAddress').textContent = `${orderData.user.address.street}, ${orderData.user.address.city}, ${orderData.user.address.state}, ${orderData.user.address.postcode}`;
+document.getElementById('orderTotal').textContent = orderData.order.totalPrice;
+
+// Populate product details
+let productList = document.getElementById('productList');
+orderData.order.cartItems.forEach(item => {
+    let li = document.createElement('li');
+    li.textContent = `${item.product.name} - ₹${item.product.price} x ${item.quantity} = ₹${item.product.price * item.quantity}`;
+    productList.appendChild(li);
+});
+</script>
+
+</body>
+</html>

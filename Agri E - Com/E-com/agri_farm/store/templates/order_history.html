@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Order History</title>
+</head>
+<body>
+    <h2>Your Order History</h2>
+
+    {% if orders %}
+        <ul>
+            {% for order in orders %}
+                <li>
+                    Order #{{ order.id }} -
+                    Status: {{ order.status }} -
+                    Total: ${{ order.total_price }}
+                    <a href="{% url 'order_detail' order.id %}">View Details</a>  <!-- Link to view order details -->
+                    <a href="{% url 'cancel_order' order.id %}">Cancel Order</a>  <!-- Link to cancel the order -->
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>{{ message }}</p>
+    {% endif %}
+</body>
+</html>
+3

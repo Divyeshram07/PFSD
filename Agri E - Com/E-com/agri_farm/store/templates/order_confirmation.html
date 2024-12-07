@@ -1,0 +1,23 @@
+<!-- order_confirmation.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Confirmation</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Order Confirmation</h1>
+    </header>
+    <main>
+        <h2>Thank you for your order!</h2>
+        <p>Your order ID is: {{ order.id }}</p>
+        <p>Total Amount: {{ order.total_price }} Rs</p>
+    </main>
+    <footer>
+        <p>© 2024 Agri Farm</p>
+    </footer>
+</body>
+</html>

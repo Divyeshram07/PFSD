@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>24/7 Customer Care</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #1b3d3c;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline-block;
+            margin-right: 20px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Contact Form Styling */
+        .contact-form {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .contact-form button {
+            background-color: #1b3d3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .contact-form button:hover {
+            background-color: #1b3d3c;
+        }
+
+        /* Chat Box Styling */
+        .chat-box {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-header {
+            background-color: #1b3d3c;
+            color: white;
+            padding: 10px;
+            font-size: 16px;
+            text-align: center;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        .chat-messages {
+            flex-grow: 1;
+            padding: 10px;
+            overflow-y: auto;
+            height: 100%;
+            font-size: 14px;
+        }
+        .chat-input {
+            display: flex;
+        }
+        .chat-input input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .chat-input button {
+            padding: 10px;
+            background-color: #1b3d3c;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-left: 5px;
+        }
+        .chat-input button:hover {
+            background-color: #1b3d3c;
+        }
+
+        /* Responsiveness */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px;
+            }
+            .contact-form {
+                width: 90%;
+            }
+            .chat-box {
+                width: 250px;
+                height: 350px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 20px;
+            }
+            .contact-form {
+                width: 100%;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+           <h1>Agri Farm - Customer Care</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/cart">Cart</a></li>
+                <li><a href="/products">Products</a></li>
+                <li><a href="/customer-care">Customer Care</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Customer Care Section -->
+    <section class="customer-care">
+        <h2>24/7 Customer Care</h2>
+
+        <!-- Contact Form -->
+        <div class="contact-form">
+    <h3>Contact Us</h3>
+    <form id="contactForm">
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Your Name" required>
+        <input type="email" name="email" placeholder="Your Email" required>
+        <textarea name="message" rows="4" placeholder="Your Message" required></textarea>
+        <button type="submit">Submit</button>
+    </form>
+    <p id="responseMessage" style="color: green; display: none;"></p>
+</div>
+
+        <br>
+
+        <!-- Chat Box -->
+        <div class="chat-box">
+            <div class="chat-header">
+                <span>Chat with us</span>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div>Welcome! How can we assist you?</div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="chatMessage" placeholder="Type a message..." />
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 Agri Farm. All rights reserved.</p>
+    </footer>
+
+    <script>
+    // AJAX form submission
+    document.getElementById("contactForm").addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        const form = event.target;
+        const formData = new FormData(form);
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        fetch("/submit-query/", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrfToken,
+            },
+            body: formData,
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                // Show success message
+                const responseMessage = document.getElementById("responseMessage");
+                responseMessage.textContent = "Mail sent successfully!";
+                responseMessage.style.display = "block";
+
+                // Clear form fields
+                form.reset();
+            } else {
+                alert("Failed to send mail. Please try again.");
+            }
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+            alert("An error occurred. Please try again later.");
+        });
+    });
+</script>
+</body>
+</html>

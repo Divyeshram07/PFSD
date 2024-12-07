@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Frequently Asked Questions for our platform and services.">
+    <title>FAQs</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f9f9f9; color: #333; line-height: 1.6;">
+    <!-- Header -->
+    <header style="background-color: #333; color: #fff; padding: 10px 20px;">
+        <nav style="display: flex; justify-content: space-between; align-items: center;">
+            <ul style="list-style: none; margin: 0; padding: 0; display: flex; gap: 15px;">
+                <li><a href="/" style="text-decoration: none; color: #fff;">Home</a></li>
+                <li><a href="{% url 'privacy_policy' %}" style="text-decoration: none; color: #fff;">Privacy Policy</a></li>
+                <li><a href="{% url 'return_policy' %}" style="text-decoration: none; color: #fff;">Return Policy</a></li>
+                <li><a href="{% url 'cancellation_policy' %}" style="text-decoration: none; color: #fff;">Cancellation Policy</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main style="max-width: 800px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        <h1 style="font-size: 2rem; color: #222; text-align: center;">Frequently Asked Questions (FAQs)</h1>
+
+        <h2 style="font-size: 1.5rem; margin-top: 20px;">1. How can I place an order?</h2>
+        <p>You can place an order by browsing our catalog, selecting your desired items, and proceeding to checkout. Follow the instructions to complete your purchase.</p>
+
+        <h2 style="font-size: 1.5rem; margin-top: 20px;">2. What payment methods are accepted?</h2>
+        <p>We accept all major credit cards, debit cards, and payment platforms such as PayPal, Stripe, and Razorpay.</p>
+
+        <h2 style="font-size: 1.5rem; margin-top: 20px;">3. How do I track my order?</h2>
+        <p>Once your order is shipped, you will receive a tracking link via email. You can also track your order in the "My Orders" section of your account.</p>
+
+        <h2 style="font-size: 1.5rem; margin-top: 20px;">4. What is the return policy?</h2>
+        <p>You can return most items within 30 days of receipt. Please refer to our <a href="{% url 'return_policy' %}" style="color: #007BFF; text-decoration: none;">Return Policy</a> for more details.</p>
+
+        <h2 style="font-size: 1.5rem; margin-top: 20px;">5. How do I cancel my order?</h2>
+        <p>You can cancel your order within 24 hours of placement. Visit our <a href="{% url 'cancellation_policy' %}" style="color: #007BFF; text-decoration: none;">Cancellation Policy</a> for detailed instructions.</p>
+
+        <h2 style="font-size: 1.5rem; margin-top: 20px;">6. Can I change my delivery address after placing an order?</h2>
+        <p>Yes, you can update your delivery address before your order is shipped. Contact our support team to request an address change.</p>
+
+        <h2 style="font-size: 1.5rem; margin-top: 20px;">7. How do I contact customer support?</h2>
+        <p>You can reach our support team at <a href="mailto:dkumar11dec2003@gmail.com" style="color: #007BFF; text-decoration: none;">dkumar11dec2003@gmail.com</a>. We’re happy to assist you!</p>
+
+        <h2 style="font-size: 1.5rem; margin-top: 20px;">8. Is my personal information secure?</h2>
+        <p>Yes, we prioritize your privacy and data security. Please refer to our <a href="{% url 'privacy_policy' %}" style="color: #007BFF; text-decoration: none;">Privacy Policy</a> for more details.</p>
+    </main>
+
+    <!-- Footer -->
+    <footer style="background-color: #333; color: #fff; text-align: center; padding: 10px;">
+        <p>&copy; 2024 Your Company Name. All rights reserved.</p>
+    </footer>
+</body>
+</html>

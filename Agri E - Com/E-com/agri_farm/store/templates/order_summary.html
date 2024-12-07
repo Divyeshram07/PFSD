@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Summary</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .summary-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .order-summary {
+            margin-bottom: 20px;
+        }
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        .total {
+            font-weight: bold;
+        }
+        .continue-btn {
+            display: block;
+            text-align: center;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .continue-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="summary-container">
+        <h1>Order Summary</h1>
+        <div class="order-summary" id="summaryDetails">
+            <!-- Dynamically populated summary details -->
+        </div>
+        <p class="total">Total Price: ₹<span id="totalPrice">0</span></p>
+        <a href="{% url 'checkout' %}" class="continue-btn">Proceed to Checkout</a>
+    </div>
+
+    <script>
+        // Populate the summary page with cart data
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const summaryDetails = document.getElementById('summaryDetails');
+        let totalPrice = 0;
+
+        cart.forEach(item => {
+            totalPrice += item.price * item.quantity;
+            const div = document.createElement('div');
+            div.className = 'summary-item';
+            div.innerHTML = `<span>${item.name} x ${item.quantity}</span><span>₹${item.price * item.quantity}</span>`;
+            summaryDetails.appendChild(div);
+        });
+
+        document.getElementById('totalPrice').textContent = totalPrice;
+    </script>
+</body>
+</html>
